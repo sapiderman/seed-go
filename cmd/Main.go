@@ -1,9 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 //Main entry point
-func Main() {
+func main() {
 
 	fmt.Println("starting.....")
 }
