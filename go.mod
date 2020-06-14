@@ -1,4 +1,4 @@
-module sapiderman/test-seed
+module github.com/sapiderman/test-seed
 
 go 1.14
 
