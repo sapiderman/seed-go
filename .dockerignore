@@ -1,0 +1,2 @@
+# ignored by docker build system
+.git*
