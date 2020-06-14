@@ -10,6 +10,8 @@
 *.so
 *.dylib
 
+seed-go-img
+
 # Test binary, built with `go test -c`
 *.test
 
@@ -18,6 +20,9 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+### dotenv ###
+.env
 
 ### Go Patch ###
 /vendor/
