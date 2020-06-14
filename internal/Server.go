@@ -6,9 +6,10 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"sapiderman/test-seed/internal/config"
 	"syscall"
 	"time"
+
+	"github.com/sapiderman/test-seed/internal/config"
 
 	log "github.com/sirupsen/logrus"
 )

@@ -3,8 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"sapiderman/test-seed/internal"
-	"sapiderman/test-seed/internal/config"
+
+	"github.com/sapiderman/test-seed/internal"
+	"github.com/sapiderman/test-seed/internal/config"
 
 	log "github.com/sirupsen/logrus"
 )

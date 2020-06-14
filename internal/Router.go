@@ -3,9 +3,9 @@ package internal
 import (
 	"context"
 	"fmt"
-	"sapiderman/test-seed/internal/handlers"
 
 	"github.com/gorilla/mux"
+	"github.com/sapiderman/test-seed/internal/handlers"
 )
 
 // Router stores the Mux instance.
