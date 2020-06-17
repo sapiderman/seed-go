@@ -24,7 +24,10 @@ test-coverage: test
 	go tool cover -html=coverage.out
 
 docker:
-	docker build -t seed-go-img-dev -f Dockerfile .
+	docker build -t seed-go-img -f Dockerfile .
+
+docker-run:
+	docker run -p 7000:7070 -d seed-go-img
 
 	
 
