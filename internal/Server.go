@@ -19,9 +19,12 @@ type Server struct {
 	Host string
 	Port int
 
+	StartUpTime time.Time
+
 	HTTPServer *http.Server
 	Router     *Router
 
+	// add aditional components here
 	// Monitor	*Monitor
 	// Database	*Database
 	// MessageQ *MessageQ
@@ -32,7 +35,7 @@ func NewServer(ctx context.Context) *Server {
 
 	cfg := ctx.Value(ContextKey("CONFIG")).(*config.Configuration)
 	server := &Server{
-		Router: NewRouter(ctx),
+		Router: NewRouter(),
 	}
 
 	server.HTTPServer = &http.Server{
@@ -44,6 +47,8 @@ func NewServer(ctx context.Context) *Server {
 		Handler:      server.Router.MuxRouter, // Pass our instance of gorilla/mux in.
 	}
 
+	server.StartUpTime = time.Now()
+
 	return server
 }
 
@@ -54,7 +59,6 @@ func (ws *Server) StartServer(ctx context.Context) {
 
 	log.Info("initiaing server...")
 	ws.Router.InitRoutes()
-	// ws.Router.MuxRouter.HandleFunc("/health", handlers.HandleHealth).Methods("GET")
 
 	// Run our server in a goroutine so that it doesn't block.
 	go func() {
