@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -19,7 +20,8 @@ type Server struct {
 	Host string
 	Port int
 
-	StartUpTime time.Time
+	StartUpTime   time.Time
+	ServerVersion string
 
 	HTTPServer *http.Server
 	Router     *Router
@@ -33,7 +35,7 @@ type Server struct {
 // NewServer initializes server object
 func NewServer(ctx context.Context) *Server {
 
-	cfg := ctx.Value(ContextKey("CONFIG")).(*config.Configuration)
+	cfg := ctx.Value(ContextKey(ConfigKey)).(*config.Configuration)
 	server := &Server{
 		Router: NewRouter(),
 	}
@@ -48,6 +50,7 @@ func NewServer(ctx context.Context) *Server {
 	}
 
 	server.StartUpTime = time.Now()
+	server.ServerVersion = strings.Join([]string{VersionBuild, VersionMinor, VersionPatch}, ".")
 
 	return server
 }
@@ -58,7 +61,10 @@ func (ws *Server) StartServer(ctx context.Context) {
 	var wait time.Duration
 
 	log.Info("initiaing server...")
-	ws.Router.InitRoutes()
+
+	serverCtxKey := ContextKey(ServerKey)
+	serverCtx := context.WithValue(ctx, serverCtxKey, ws)
+	ws.Router.InitRoutes(serverCtx)
 
 	// Run our server in a goroutine so that it doesn't block.
 	go func() {

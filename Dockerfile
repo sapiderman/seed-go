@@ -44,4 +44,5 @@ WORKDIR /app
 USER appuser:appuser
 EXPOSE 7000
 
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD curl -f http://localhost:7000/health/ || exit 2
 CMD ["/app/seed-go-img"]

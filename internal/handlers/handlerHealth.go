@@ -12,6 +12,8 @@ type healthResponse struct {
 	ServerStatus     string `json:"serverStatus"`
 	ServerTime       string `json:"serverTime"`
 	ServerUpDuration uint64 `json:"serverUpDuration"`
+
+	ServerVersion string `json:"serverVersion"`
 }
 
 // HandlerHealth handles /health calls
@@ -22,8 +24,10 @@ func HandlerHealth(w http.ResponseWriter, s *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 	resp := &healthResponse{
-		ServerStatus: "I'm Aliiiive",
-		ServerTime:   time.Now().String(),
+		ServerStatus:     "I'm Aliiiive",
+		ServerTime:       time.Now().String(),
+		ServerUpDuration: 0,
+		ServerVersion:    "0.0.0.0",
 	}
 
 	jsonData, err := json.Marshal(resp)
