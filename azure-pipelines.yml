@@ -29,11 +29,11 @@ steps:
 
 - script: |
     go version
-    go get -v -t -d ./...
+    go get -v -t -d ./cmd/
     if [ -f Gopkg.toml ]; then
         curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
         dep ensure
     fi
-    go build -v .
+    go build -v cmd/Main.go
   workingDirectory: '$(modulePath)'
   displayName: 'Get dependencies, then build'
