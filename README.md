@@ -22,7 +22,7 @@ GET v1/hello
 ## tests
 
 `go test ./... -v -covermode=count -coverprofile=coverage.out`  
-or
+or  
 `make test`  
 `make test-coverage`  
 
@@ -40,4 +40,4 @@ or
 
 `make docker-run`  
 
-fork. clone. contribute and share!
+fork. clone. contribute and share!  
