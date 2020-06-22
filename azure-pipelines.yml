@@ -30,12 +30,15 @@ steps:
     inputs:
       TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      artifactName: drop   
-      
   - task: Go@0
     inputs:
       command: 'test'
       arguments: '-v ./... -covermode=count -coverprofile=coverage.out'
       workingDirectory: '$(modulePath)'
+
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      artifactName: drop   
+      
+
