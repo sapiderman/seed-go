@@ -38,5 +38,5 @@ steps:
     inputs:
       command: 'test'
       arguments: '-v ./... -covermode=count -coverprofile=coverage.out'
-      workingDirectory: '$(modulePath)'
+      workingDirectory: '$(System.DefaultWorkingDirectory)'
       
