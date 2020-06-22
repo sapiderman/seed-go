@@ -12,10 +12,10 @@ const VersionPatch = "1"
 // VersionBuild build is optional build semver
 const VersionBuild = "20200505133100"
 
-// CtxConfigKey context key for app config
+// ConfigKey context key for app config
 const ConfigKey = "CONFIG"
 
-// CtxServerKey context key for srv config
+// ServerKey context key for srv config
 const ServerKey = "SERVER"
 
 // ContextKey thingies
