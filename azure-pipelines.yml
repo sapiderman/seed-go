@@ -30,7 +30,7 @@ trigger:
       artifactName: drop
       
   - task: Go@0
-  inputs:
-    command: 'test'
-    arguments: '-v'
-    workingDirectory: '$(modulePath)'
+    inputs:
+      command: 'test'
+      arguments: '-v'
+      workingDirectory: '$(modulePath)'
