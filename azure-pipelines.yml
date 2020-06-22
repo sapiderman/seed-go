@@ -16,11 +16,12 @@ steps:
   - task: Go@0
     inputs:
       command: 'get'
-      arguments: '-d'
+      arguments: '-d' ./...
       workingDirectory: '$(System.DefaultWorkingDirectory)'
   - task: Go@0
     inputs:
       command: 'build'
+      arguments: '-a -o seed-go-img cmd/Main.go'
       workingDirectory: '$(System.DefaultWorkingDirectory)'
   - task: CopyFiles@2
     inputs:
@@ -31,5 +32,5 @@ steps:
   - task: Go@0
     inputs:
       command: 'test'
-      arguments: '-v'
+      arguments: '-v ./... -covermode=count -coverprofile=coverage.out'
       workingDirectory: '$(modulePath)'
