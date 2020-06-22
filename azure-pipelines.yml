@@ -14,13 +14,13 @@ steps:
   - task: GoTool@0
     inputs:
       version: '1.14.3'
-  - task: GoGet@0
+  - task: Go@0
     inputs:
       command: 'get'
       arguments: '-d ./...'
       workingDirectory: '$(System.DefaultWorkingDirectory)'
 
-  - task: Build@0
+  - task: Go@0
     inputs:
       command: 'build'
       arguments: '-a -o seed-go-img cmd/Main.go'
@@ -34,7 +34,7 @@ steps:
     inputs:
       artifactName: drop   
       
-  - task: Test@0
+  - task: Go@0
     inputs:
       command: 'test'
       arguments: '-v ./... -covermode=count -coverprofile=coverage.out'
