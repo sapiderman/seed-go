@@ -13,7 +13,7 @@ Small starter project to play around with github actions and various pipelines.
 ## endpoints
 
 GET /health  
-GET v1/hello  
+GET /v1/hello  
 
 ## build
 
@@ -28,7 +28,7 @@ or
 
 ## generate-binary
 
-`go build -a -o seed-go-img cmd/Main.go`
+`go build -a -o seed-go-img cmd/Main.go`  
 or  
 `make build`  
 
