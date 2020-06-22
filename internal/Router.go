@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/gorilla/mux"
@@ -22,11 +23,14 @@ func NewRouter() *Router {
 }
 
 // InitRoutes creates our routes
-func (r *Router) InitRoutes() {
+func (r *Router) InitRoutes(ctx context.Context) {
 
 	fmt.Println("initializing routes")
 
 	r.MuxRouter.HandleFunc("/health", handlers.HandlerHealth).Methods("GET")
-	r.MuxRouter.HandleFunc("/hello", handlers.HandlerHello).Methods("GET")
+
+	// v1 APIs
+	v1 := r.MuxRouter.PathPrefix("/v1").Subrouter()
+	v1.HandleFunc("/hello", handlers.HandlerHello).Methods("GET")
 
 }

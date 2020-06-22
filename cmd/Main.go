@@ -6,7 +6,6 @@ import (
 
 	"github.com/sapiderman/test-seed/internal"
 	"github.com/sapiderman/test-seed/internal/config"
-
 	log "github.com/sirupsen/logrus"
 )
 
@@ -45,8 +44,8 @@ func main() {
 
 	// create config and app context
 	cfg = config.LoadConfig()
-	configContext := internal.ContextKey("CONFIG")
-	appContext := context.WithValue(context.Background(), configContext, cfg)
+	cfgCtxKey := internal.ContextKey(internal.ConfigKey)
+	appContext := context.WithValue(context.Background(), cfgCtxKey, cfg)
 
 	// start server
 	server := internal.NewServer(appContext)

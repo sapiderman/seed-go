@@ -35,3 +35,6 @@ jobs:
 
     - name: Test
       run: go test -v ./...
+    
+    - name: Build docker
+      run: docker build . --file Dockerfile -t seed-go-img:$(date +%s)
