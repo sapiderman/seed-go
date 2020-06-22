@@ -14,13 +14,13 @@ steps:
   - task: GoTool@0
     inputs:
       version: '1.14.3'
-  - task: Go@0
+  - task: GoGet@0
     inputs:
       command: 'get'
       arguments: '-d ./...'
       workingDirectory: '$(System.DefaultWorkingDirectory)'
 
-  - task: Go@0
+  - task: Build@0
     inputs:
       command: 'build'
       arguments: '-a -o seed-go-img cmd/Main.go'
@@ -30,15 +30,13 @@ steps:
     inputs:
       TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-  - task: Go@0
-    inputs:
-      command: 'test'
-      arguments: '-v ./... -covermode=count -coverprofile=coverage.out'
-      workingDirectory: '$(modulePath)'
-
-
   - task: PublishBuildArtifacts@1
     inputs:
       artifactName: drop   
       
-
+  - task: Test@0
+    inputs:
+      command: 'test'
+      arguments: '-v ./... -covermode=count -coverprofile=coverage.out'
+      workingDirectory: '$(modulePath)'
+      
