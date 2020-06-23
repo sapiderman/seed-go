@@ -1,4 +1,5 @@
 ![Go](https://github.com/sapiderman/seed-go/workflows/Go/badge.svg)
+GET https://dev.azure.com/sapiderman/seed-go/_apis/build/repos/master/badge?api-version=5.1-preview.2
 
 # Golang Seed
 
