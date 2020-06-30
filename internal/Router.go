@@ -6,6 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/sapiderman/test-seed/internal/handlers"
+	"github.com/sapiderman/test-seed/internal/logger"
 )
 
 // Router stores the Mux instance.
@@ -26,6 +27,9 @@ func NewRouter() *Router {
 func (r *Router) InitRoutes(ctx context.Context) {
 
 	fmt.Println("initializing routes")
+
+	// middleware
+	r.MuxRouter.Use(logger.MyLogger)
 
 	r.MuxRouter.HandleFunc("/health", handlers.HandlerHealth).Methods("GET")
 
