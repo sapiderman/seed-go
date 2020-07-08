@@ -7,9 +7,8 @@ on:
     branches: [ master ]
 
 jobs:
-
   build:
-    name: Build
+    name: Test and build
     runs-on: ubuntu-latest
     steps:
 
@@ -23,14 +22,12 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Test
-        run: |
-          go vet ./...
-          go test -v ./... -race -covermode=atomic -coverprofile=coverage.out
+      run: |
+        go vet ./...
+        go test -v ./... -race -covermode=atomic -coverprofile=coverage.out
 
     - name: Build
       run: go build -v cmd/Main.go
 
-
-    
     - name: Build docker
       run: docker build . --file Dockerfile -t seed-go-img:$(date +%s)
