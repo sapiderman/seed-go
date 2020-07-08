@@ -29,14 +29,18 @@ GET /v1/hello
 ## tests
 
 `go test ./... -v -covermode=count -coverprofile=coverage.out`  
+
 or  
+
 `make test`  
 `make test-coverage`  
 
 ## generate-binary
 
 `go build -a -o seed-go-img cmd/Main.go`  
+  
 or  
+  
 `make build`  
 
 ## create docker
