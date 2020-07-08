@@ -22,8 +22,8 @@ jobs:
       - checkout
 
       # specify any bash command here prefixed with `run: `
-      - run: go version
+      - run: go vet ./...
       - run: go build -v cmd/Main.go
-      - run: go test -v ./... -covermode=count -coverprofile=coverage.out
+      - run: go test -v ./... -race -covermode=atomic -coverprofile=coverage.out
 
       

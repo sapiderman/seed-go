@@ -34,7 +34,8 @@ jobs:
       run: go build -v cmd/Main.go
 
     - name: Test
-      run: go test -v ./...
+      run: go vet ./...
+      run: go test -v ./... -race -covermode=atomic -coverprofile=coverage.out
     
     - name: Build docker
       run: docker build . --file Dockerfile -t seed-go-img:$(date +%s)
