@@ -28,10 +28,11 @@ test_unit:
         - go vet ./...
         - make test
     
-test_coverage:
-    stage: test
-    script:
-        - go tool cover -html=coverage.out
+# disable for now.. TODO: do properly coverage visualization
+# test_coverage: 
+#     stage: test
+#     script:
+#         - go tool cover -html=coverage.out
 
 build:
     stage: build
