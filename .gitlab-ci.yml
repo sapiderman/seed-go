@@ -13,6 +13,7 @@ before_script:
     - mkdir -p $GOPATH/src/$REPO/$GROUP $GOPATH/src/_/builds
     - cp -r $CI_PROJECT_DIR $GOPATH/src/$REPO/$GROUP/$PROJECT
     - ln -s $GOPATH/src/$REPO/$GROUP $GOPATH/src/_/builds/$GROUP  
+    - go get -u golang.org/x/lint/golint
     
 unit_tests:
     stage: test
