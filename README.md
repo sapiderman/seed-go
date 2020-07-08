@@ -1,7 +1,7 @@
+# Golang Seed
+
 ![Go](https://github.com/sapiderman/seed-go/workflows/Go/badge.svg)
 [![Build Status](https://dev.azure.com/sapiderman/seed-go/_apis/build/status/sapiderman.seed-go?branchName=master)](https://dev.azure.com/sapiderman/seed-go/_build/latest?definitionId=1&branchName=master)
-
-# Golang Seed
 
 Small starter project to play around with github actions and various pipelines.  
 
@@ -10,6 +10,12 @@ Small starter project to play around with github actions and various pipelines.
 - gorilla mux  
 - contexts  
 - logrus  
+
+todo:  
+
+- circuit breaker  
+- swagger docs  
+- profiler  
 
 ## endpoints
 
@@ -40,5 +46,16 @@ or
 ## run docker  
 
 `make docker-run`  
+
+## some docs  
+
+[license](./LICENSE)  
+[code of conduct](./code_of_conduct.md)  
+
+## project structure
+
+TBD.
+
+---  
 
 fork. clone. contribute and share!  

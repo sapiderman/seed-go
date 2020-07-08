@@ -1,0 +1,37 @@
+image : golang:latest
+
+variables:
+    REPO: gitlab.com
+    GROUP: sapiderman
+    PROJECT: seed-go
+
+stages:
+    - test
+    - build
+
+before_script:
+    - mkdir -p $GOPATH/src/$REPO/$GROUP $GOPATH/src/_/builds
+    - cp -r $CI_PROJECT_DIR $GOPATH/src/$REPO/$GROUP/$PROJECT
+    - ln -s $GOPATH/src/$REPO/$GROUP $GOPATH/src/_/builds/$GROUP  
+    
+unit_tests:
+    stage: test
+    script:
+        - make test
+    
+lint_tests:
+    stage: test
+    script:
+        - make lint        
+
+build:
+    stage: build
+    script:
+        - make build
+
+
+
+
+
+
+
