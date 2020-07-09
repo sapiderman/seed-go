@@ -1,0 +1,42 @@
+# Go
+# Build your Go project.
+# Add steps that test, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/go
+name: $(Build.DefinitionName) - $(Date:ddMMyyy) Build $(BuildID)
+
+trigger: 
+  - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps: 
+  - task: GoTool@0
+    inputs:
+      version: '1.14.3'
+  - task: Go@0
+    inputs:
+      command: 'get'
+      arguments: '-d ./...'
+      workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+  - task: Go@0
+    inputs:
+      command: 'build'
+      arguments: '-a -o seed-go-img cmd/Main.go'
+      workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+  - task: CopyFiles@2
+    inputs:
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      artifactName: drop   
+      
+  - task: Go@0
+    inputs:
+      command: 'test'
+      arguments: '-v ./... -covermode=count -coverprofile=coverage.out'
+      workingDirectory: '$(System.DefaultWorkingDirectory)'
+      
