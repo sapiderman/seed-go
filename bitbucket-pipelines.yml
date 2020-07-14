@@ -1,6 +1,5 @@
-# 
-#
-# 
+# seed-go
+# bitbucket pipeline script
 image: golang:latest
 
 definitions:
