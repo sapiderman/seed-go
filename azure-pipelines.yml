@@ -4,13 +4,13 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/go
 name: $(Build.DefinitionName) - $(Date:ddMMyyy) Build $(BuildID)
 
-trigger: 
+trigger:
   - master
 
 pool:
   vmImage: 'ubuntu-latest'
 
-steps: 
+steps:
   - task: GoTool@0
     inputs:
       version: '1.14.3'
@@ -32,11 +32,11 @@ steps:
 
   - task: PublishBuildArtifacts@1
     inputs:
-      artifactName: drop   
-      
+      artifactName: drop
+
   - task: Go@0
     inputs:
       command: 'test'
       arguments: '-v ./... -covermode=count -coverprofile=coverage.out'
       workingDirectory: '$(System.DefaultWorkingDirectory)'
-      
+

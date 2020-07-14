@@ -1,0 +1,34 @@
+# seed-go
+# bitbucket pipeline script
+image: golang:latest
+
+definitions:
+    buildtest: &buildtest |
+        cp .env.example .env
+        go get -v golang.org/x/lint/golint
+        go version
+        make test
+        make build
+
+pipelines:
+    default: #default pipeline 
+    - step: 
+        name: Build and test
+        script:
+            - echo "Default pipeline triggered"
+            - *buildtest
+
+    branches:
+        master:
+            - step:
+                script:
+                    - echo "Master pipeline triggerred"
+                    - *buildtest
+
+    pull-requests:
+        '**':
+            - step:
+                name: Build and test
+                script:
+                    - echo "Pull Request Trigger"
+                    - *buildtest
