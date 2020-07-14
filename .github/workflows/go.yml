@@ -23,7 +23,7 @@ jobs:
 
     - name: Vet sources
       run: go vet ./...
-        
+
     - name: Test project
       run: go test -v ./... -race -covermode=atomic -coverprofile=coverage.out
 

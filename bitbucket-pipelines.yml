@@ -11,8 +11,6 @@ definitions:
         make test
         make build
 
-        
-
 pipelines:
     default: #default pipeline 
     - step: 
