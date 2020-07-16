@@ -25,5 +25,3 @@ jobs:
       - run: go vet ./...
       - run: go build -v cmd/Main.go
       - run: go test -v ./... -race -covermode=atomic -coverprofile=coverage.out
-
-      

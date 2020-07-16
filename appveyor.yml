@@ -1,0 +1,33 @@
+# github.com/sapiderman/seed-go
+# appveyor.yml
+
+build: off
+
+clone_folder: /usr/go/src/github.com/sapiderman/seed-go
+
+image: 
+  - Ubuntu
+
+environment:
+  GOPATH: /usr/go/
+
+install: 
+  - go version
+  - go get -u golang.org/x/lint/golint
+  
+stack: go 1.14
+
+before_test:
+  - go vet ./...
+
+test_script:
+  - make test
+
+build_script:
+  - make docker
+
+artifacts:
+  - path: /usr/go/src/github.com/sapiderman/seed-go/seed-go-img
+    name: seed-go-img
+
+  
