@@ -11,8 +11,8 @@ definitions:
         make build
 
 pipelines:
-    default: #default pipeline 
-    - step: 
+    default: #default pipeline
+    - step:
         name: Build and test
         script:
             - echo "Default pipeline triggered"
