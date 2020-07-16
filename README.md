@@ -69,7 +69,8 @@ Using some free ci tools and code quality scanners.
 | [azure](dev.azure.com) | [![Build Status](https://dev.azure.com/sapiderman/seed-go/_apis/build/status/sapiderman.seed-go?branchName=master)](https://dev.azure.com/sapiderman/seed-go/_build/latest?definitionId=1&branchName=master)               |
 | [circleci](circleci.com) | [![Build Status](https://travis-ci.com/sapiderman/seed-go.svg?branch=master)](https://travis-ci.com/sapiderman/seed-go) |
 | [travic-ci.com](https://travis-ci.com) |[![Build Status](https://travis-ci.com/sapiderman/seed-go.svg?branch=master)](https://travis-ci.com/sapiderman/seed-go)             |
-| goreportcard.com  | [![Go Report Card](https://goreportcard.com/badge/github.com/sapiderman/seed-go)](https://goreportcard.com/report/github.com/sapiderman/seed-go)             |
+| [appveyor.com](https://appveyor.com) | [![Build status](https://ci.appveyor.com/api/projects/status/dd8phuty1k4n4v23/branch/master?svg=true)](https://ci.appveyor.com/project/Budhi/seed-go/branch/master) |
+| [goreportcard.com](https://goreportcard.com)  | [![Go Report Card](https://goreportcard.com/badge/github.com/sapiderman/seed-go)](https://goreportcard.com/report/github.com/sapiderman/seed-go)             |
 | [codeclimate.com](https://www.codeclimate.com) | [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability) |
 |                   | [![Test Coverage](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/test_coverage)](https://codeclimate.com/github/codeclimate/codeclimate/test_coverage)             |  
 | | |  
