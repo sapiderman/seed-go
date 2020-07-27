@@ -1,0 +1,11 @@
+
+steps:
+    - label: ":hammer: Example Script"
+      command: "./make test"
+      artifact_paths: "artifacts/*"
+      agents:
+        queue: "${BUILDKITE_AGENT_META_DATA_QUEUE:-default}"
+      env:
+        BUILDKITE_GOLANG_IMPORT_PATH: "github.com/sapiderman/seed-go"
+
+    

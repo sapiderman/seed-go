@@ -5,16 +5,16 @@ build: off
 
 clone_folder: /usr/go/src/github.com/sapiderman/seed-go
 
-image: 
+image:
   - Ubuntu
 
 environment:
   GOPATH: /usr/go/
 
-install: 
+install:
   - go version
   - go get -u golang.org/x/lint/golint
-  
+
 stack: go 1.14
 
 before_test:
@@ -30,4 +30,3 @@ artifacts:
   - path: /usr/go/src/github.com/sapiderman/seed-go/seed-go-img
     name: seed-go-img
 
-  
