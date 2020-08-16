@@ -5,8 +5,10 @@ image: golang:latest
 definitions:
     buildtest: &buildtest |
         cp .env.example .env
+        go mod tidy
         go get -v golang.org/x/lint/golint
         go version
+        go vet ./...
         make test
         make build
 

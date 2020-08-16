@@ -4,12 +4,12 @@ IMAGE_NAME ?= seed-go-img
 
 .PHONY: all test clean build docker
 
+build: 
+	go build -a -o $(IMAGE_NAME) cmd/Main.go
+
 clean:
 	go clean
 	rm -f $(IMAGE_NAME)
-
-build: 
-	go build -a -o $(IMAGE_NAME) cmd/Main.go
 
 lint: build
 	golint -set_exit_status ./...

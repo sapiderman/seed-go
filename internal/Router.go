@@ -7,6 +7,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/sapiderman/test-seed/internal/handlers"
 	"github.com/sapiderman/test-seed/internal/logger"
+
+	"go.elastic.co/apm/module/apmgorilla"
 )
 
 // Router stores the Mux instance.
@@ -29,6 +31,7 @@ func (r *Router) InitRoutes(ctx context.Context) {
 	fmt.Println("initializing routes")
 
 	// middleware
+	apmgorilla.Instrument(r.MuxRouter)
 	r.MuxRouter.Use(logger.MyLogger)
 
 	r.MuxRouter.HandleFunc("/health", handlers.HandlerHealth).Methods("GET")

@@ -25,6 +25,7 @@ before_script:
 test_unit:
     stage: test
     script:
+        - go mod tidy 
         - go vet ./...
         - make test
     

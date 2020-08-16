@@ -9,6 +9,7 @@ Small starter project to play around with github actions and various pipelines.
 - gorilla mux  
 - contexts  
 - logrus  
+- elastic apm
 
 todo:  
 
@@ -74,6 +75,5 @@ Using some free ci tools and code quality scanners.
 | [codeclimate.com](https://www.codeclimate.com) | [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability) |
 |                   | [![Test Coverage](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/test_coverage)](https://codeclimate.com/github/codeclimate/codeclimate/test_coverage)             |  
 | | |  
-
 
 fork. clone. contribute and share!  
