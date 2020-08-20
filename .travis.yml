@@ -1,0 +1,14 @@
+language: go
+
+go:
+    - master
+
+before_install:
+    - go mod tidy
+    - go get -v golang.org/x/lint/golint
+
+script:
+    - go version
+    - go vet ./...
+    - make test
+    - make build
