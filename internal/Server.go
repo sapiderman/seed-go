@@ -96,6 +96,6 @@ func (ws *Server) StartServer(ctx context.Context) {
 	// Optionally, you could run srv.Shutdown in a goroutine and block on
 	// <-ctx.Done() if your application should wait for other services
 	// to finalize based on context cancellation.
-	log.Println("shutting down........ byee")
+	log.Info("shutting down........ byee")
 	os.Exit(0)
 }

@@ -30,10 +30,13 @@ func HandlerHealth(w http.ResponseWriter, s *http.Request) {
 	}
 
 	jsonData, err := json.Marshal(resp)
+	if err != nil {
+		fmt.Println("json error: ", err)
+	}
+
 	_, err = w.Write(jsonData)
 	if err != nil {
 		fmt.Println("json error: ", err)
-
 	}
 
 }

@@ -1,27 +1,14 @@
-###########################
-###########################
-## Linter GitHub Actions ##
-###########################
-###########################
-name: Github Actions - Lint Code Base
+# This is a basic workflow that is manually triggered
 
-#
-# Documentation:
-# https://help.github.com/en/articles/workflow-syntax-for-github-actions
-#
+name: Github Actions - Manual workflow
 
-#############################
-# Start the job on all push #
-#############################
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
 on:
-  push:
-#    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-    
-###############
-# Set the Job #
-###############
+  workflow_dispatch:
+
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
     # Name the Job
@@ -43,16 +30,15 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: docker://github/super-linter:v2
+        uses: docker://github/super-linter:latest
         env:
           VALIDATE_ALL_CODEBASE: true
           # DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MULTI_STATUS: true
 
-          VALIDATE_GO: true
-          VALIDATE_DOCKER: true
-          VALIDATE_ENV: true
+          # VALIDATE_GO: true
+          # VALIDATE_DOCKER: true
+          # VALIDATE_ENV: true
           # VALIDATE_JSON: true
-          VALIDATE_YAML: true
-
+          # VALIDATE_YAML: true

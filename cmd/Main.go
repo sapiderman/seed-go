@@ -26,17 +26,13 @@ func init() {
 	log.Info("intializing")
 	log.SetFormatter(&log.JSONFormatter{})
 	log.SetLevel(log.DebugLevel)
-
-	return
 }
 
 //Main entry point
 func main() {
 
-	var cfg *config.Configuration
-
 	// create config and config context
-	cfg = config.LoadConfig()
+	cfg := config.LoadConfig()
 	cfgCtxKey := internal.ContextKey(internal.ConfigKey)
 	cfgContext := context.WithValue(context.Background(), cfgCtxKey, cfg)
 

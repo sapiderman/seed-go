@@ -8,14 +8,13 @@ Small starter project to play around with golang features, github actions and va
 
 | Features | Description |
 | :-------------    | :----------: |  
-| gorilla mux       | [gorilla mux](https://github.com/gorilla/mux) |  
+| gorilla mux       | [routing using gorilla mux](https://github.com/gorilla/mux) |  
 | contexts          | [contexts](https://golang.org/pkg/context/)|
 | logrus            | [logging library](https://github.com/sirupsen/logrus)|
 | monitoring        | [elastic's application performance monitoring](https://www.elastic.co/guide/en/apm/agent/go/1.x/getting-started.html) |  
 | swagger api       | [API documentations using swagger swagger.io](https://swagger.io/specification/) |  
 | | |  
 
- 
 todo:  
 
 - circuit breaker  
@@ -68,7 +67,7 @@ TBD.
 
 ## integrations  
 
-Using some free ci tools and code quality scanners.  
+Using some free ci tools and code quality scanners.  There's some really great tools for public projects, trying them here.
 
 | Service           | Status       |
 | :-------------    | :----------: |

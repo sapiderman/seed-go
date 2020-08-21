@@ -23,7 +23,6 @@ func NewRouter() *Router {
 	return &Router{
 		MuxRouter: mux.NewRouter(),
 	}
-
 }
 
 // InitRoutes creates our routes
@@ -38,6 +37,7 @@ func (r *Router) InitRoutes(ctx context.Context) {
 
 	// health check endpoint. Not in a version path as it will seems to be a permanent endpoint (famous last words)
 	r.MuxRouter.HandleFunc("/health", handlers.HandlerHealth).Methods("GET")
+
 	// handle swagger api static files as /docs.
 	r.MuxRouter.PathPrefix("/docs").Handler(server.StaticFilter)
 
@@ -45,9 +45,12 @@ func (r *Router) InitRoutes(ctx context.Context) {
 	v1 := r.MuxRouter.PathPrefix("/v1").Subrouter()
 	v1.HandleFunc("/hello", handlers.HandlerHello).Methods("GET")
 
+	// display routes
+	walk(*r.MuxRouter)
+
 }
 
-// walk runs the mux.Router.Walk method to print all the registerd router.
+// walk runs the mux.Router.Walk method to print all the registerd routes
 func walk(r mux.Router) {
 	err := r.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 		pathTemplate, err := route.GetPathTemplate()
