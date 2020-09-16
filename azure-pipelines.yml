@@ -16,56 +16,59 @@ pr:
 pool:
   vmImage: 'ubuntu-latest'
 
-  jobs:
-    - job: pull_request
-      displayName: 'Build and Test for Pull Request'
-      condition: and(succeeded(), in(variables['Build.Reason'], 'Manual', 'PullRequest'))
-      timeoutInMinutes: 30
-      steps:
-      - task: GoTool@0
-        inputs:
-          version: '1.15.1'
-    
-      - task: Go@0
-        inputs:
-          command: 'get'
-          arguments: '-d ./...'
+stages:
+  - stage: Build
+
+    jobs:
+      - job: pull_request
+        displayName: 'Build and Test for Pull Request'
+        condition: and(succeeded(), in(variables['Build.Reason'], 'Manual', 'PullRequest'))
+        timeoutInMinutes: 30
+        steps:
+        - task: GoTool@0
+          inputs:
+            version: '1.15.1'
+      
+        - task: Go@0
+          inputs:
+            command: 'get'
+            arguments: '-d ./...'
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
+      
+        - script: |
+              set -ex      
+              go version
+              go get -u github.com/jstemmer/go-junit-report
+              go get github.com/axw/gocov/gocov
+              go get github.com/AlekSi/gocov-xml
+              go get -u golang.org/x/lint/golint
+          displayName: 'Load dependencies'
+      
+        - script: |
+              set -ex
+              /home/vsts/go/bin/golint -set_exit_status cmd/... internal/... 
+              go test ./... -cover -vet -all -v -short -covermode=count -coverprofile=coverage.out > test_results.txt
+              go-junit-report < test_results.txt > report.xml 
+              /home/vsts/go/bin/gocover-cobertura < coverage.out > coverage.xml
           workingDirectory: '$(System.DefaultWorkingDirectory)'
-    
-      - script: |
-            set -ex      
-            go version
-            go get -u github.com/jstemmer/go-junit-report
-            go get github.com/axw/gocov/gocov
-            go get github.com/AlekSi/gocov-xml
-            go get -u golang.org/x/lint/golint
-        displayName: 'Load dependencies'
-    
-      - script: |
-            set -ex
-            /home/vsts/go/bin/golint -set_exit_status cmd/... internal/... 
-            go test ./... -cover -vet -all -v -short -covermode=count -coverprofile=coverage.out > test_results.txt
-            go-junit-report < test_results.txt > report.xml 
-            /home/vsts/go/bin/gocover-cobertura < coverage.out > coverage.xml
-        workingDirectory: '$(System.DefaultWorkingDirectory)'
-        displayName: 'Run unit/coverage test'
-    
-      - task: Go@0
-        inputs:
-          command: 'build'
-          arguments: '-a -o seed-go-img cmd/Main.go'
-          workingDirectory: '$(System.DefaultWorkingDirectory)'
-    
-      - task: PublishTestResults@2
-        displayName: 'Publish Test Results'
-        inputs:
-          testRunner: JUnit
-          testResultsFiles: $(System.DefaultWorkingDirectory)/**/report.xml
-    
-      - task: PublishCodeCoverageResults@1
-        inputs:
-          codeCoverageTool: 'Cobertura'
-          summaryFileLocation: 'coverage.xml'
+          displayName: 'Run unit/coverage test'
+      
+        - task: Go@0
+          inputs:
+            command: 'build'
+            arguments: '-a -o seed-go-img cmd/Main.go'
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
+      
+        - task: PublishTestResults@2
+          displayName: 'Publish Test Results'
+          inputs:
+            testRunner: JUnit
+            testResultsFiles: $(System.DefaultWorkingDirectory)/**/report.xml
+      
+        - task: PublishCodeCoverageResults@1
+          inputs:
+            codeCoverageTool: 'Cobertura'
+            summaryFileLocation: 'coverage.xml'
 
 
 
