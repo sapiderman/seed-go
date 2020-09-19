@@ -1,0 +1,16 @@
+#####################################################################
+# Azure pipeline : get dependencies
+# github.com/sapiderman/seed-go
+#################################################################### 
+steps:    
+    - script: |
+        set -ex      
+        go version
+        go get github.com/jstemmer/go-junit-report
+        go get github.com/axw/gocov/gocov
+        go get github.com/AlekSi/gocov-xml
+        go get golang.org/x/lint/golint
+        go get github.com/t-yuki/gocover-cobertura
+        sudo timedatectl set-timezone Asia/Jakarta
+      workingDirectory: '$(System.DefaultWorkingDirectory)'
+      displayName: 'Fetch dependencies'

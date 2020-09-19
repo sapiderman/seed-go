@@ -1,0 +1,50 @@
+################################################################################
+# gitlab-ci.yml 
+# github.com/sapiderman/seed-go
+###############################################################################
+
+image : golang:latest
+
+variables:
+    REPO: gitlab.com
+    GROUP: sapiderman
+    PROJECT: seed-go
+    REPO_NAME: gitlab.com/sapiderman/seed-go
+
+stages:
+    - test
+    - build
+
+# The problem is that to be able to use go get, one needs to put
+# the repository in the $GOPATH. So for example if your gitlab domain
+# is gitlab.com, and that your repository is namespace/project, and
+# the default GOPATH being /go, then you'd need to have your
+# repository in /go/src/gitlab.com/namespace/project
+# Thus, making a symbolic link corrects this.
+before_script:
+    - mkdir -p $GOPATH/src/$(dirname $REPO_NAME)
+    - ln -svf $CI_PROJECT_DIR $GOPATH/src/$REPO_NAME
+    - cd $GOPATH/src/$REPO_NAME 
+    - go get -u golang.org/x/lint/golint
+    
+test_unit:
+    stage: test
+    script:
+        - go mod tidy 
+        - go vet ./...
+        - make test
+    
+# disable for now.. TODO: do properly coverage visualization
+# test_coverage: 
+#     stage: test
+#     script:
+#         - go tool cover -html=coverage.out
+
+build:
+    stage: build
+    script:
+        - make build
+    artifacts:
+        paths:
+            - binaries/
+        expire_in: 1 week

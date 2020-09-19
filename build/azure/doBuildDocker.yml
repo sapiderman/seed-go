@@ -1,0 +1,34 @@
+#####################################################
+# azure build Docker steps
+# github.com/sapiderman/seed-go
+#####################################################
+parameters:
+    - name: tag
+      type: string
+      default: master
+    - name: dockerCommand
+      type: string
+      default: 'build'
+        
+  steps:
+      # - task: Docker@2
+      #   displayName: Login to ACR
+      #   inputs:
+      #     command: login
+      #     containerRegistry: dockerRegistryServiceConnection1 TODO: to configure
+  
+      # - task: Docker@2
+      #   displayName: Login to Docker Hub
+      #   inputs:
+      #     command: login
+      #     containerRegistry: dockerRegistryServiceConnection2  TODO: to configure
+  
+      - task: Docker@2
+        displayName: Build and/or push to Docker Hub
+        inputs:
+          containerRegistry: 'my-registry'   # TODO : to configure
+          repository: 'myrepo/go/seed-go'
+          command: ${{ parameters.dockerCommand }}
+          Dockerfile: '**/.docker/Dockerfile'
+          tags: ${{ parameters.tag }}
+  

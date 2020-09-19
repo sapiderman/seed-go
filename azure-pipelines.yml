@@ -1,0 +1,56 @@
+################################################################################
+# azure-pipelines.com.yml
+# github.com/sapiderman/seed-go
+# https://docs.microsoft.com/azure/devops/pipelines/languages/go
+################################################################################
+name: $(Build.DefinitionName) - $(Date:ddMMyyy) Build $(BuildID)
+
+trigger:
+  branches:
+    include:
+      - '*'
+pr:
+  branches:
+    include:
+      - '*'      
+
+variables:
+  goVersion: '1.15.1'
+  imgName: 'seed-go-img'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+  - stage: Test and Build
+
+    jobs:
+      - job: pull_request
+        displayName: 'Build and Test for Pull Request'
+        condition: and(succeeded(), in(variables['Build.Reason'], 'Manual', 'PullRequest'))
+        timeoutInMinutes: 30
+        steps:
+        - task: GoTool@0
+          inputs:
+            version: $(goVersion)
+
+        - task: Go@0
+          inputs:
+            command: 'get'
+            arguments: '-d ./...'
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
+      
+        - template: build/azure/getDependencies.yml
+        - template: build/azure/doTests.yml
+
+        - template: build/azure/doBuild.yml
+          parameters:
+            imgName: $(imgName)
+
+        - template: build/azure/doBuildDocker.yml
+          parameters:
+            tag: '$(BuildID)'
+            dockerCommand: 'build'
+
+
+
