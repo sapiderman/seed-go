@@ -1,23 +1,23 @@
 
 # Hello, PR request
 
-## lets see
+## PR type  
 
-### what you doing
-
-- [ ] nothing
-- [ ] less than nothing
 - [ ] feature
 - [ ] bugfix
 - [ ] etc
 
+### what issue this pr address
+
+1. missing feature1
+
 ### how did you implement
 
-1. wrote some code
-2. pushed code
+1. impelmented feature1
+2. fixed feature 2
 
 ### how do you test
 
-1. test?
-2. what test?
-3. dont be ridiculous, who tests?
+1. **git clone repository**
+2. **make test**
+3. **make lint**

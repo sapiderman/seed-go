@@ -13,7 +13,7 @@ image:
 environment:
   GOPATH: /usr/go/
 
-  install:
+install:
   - go version
   - go get -u golang.org/x/lint/golint
 

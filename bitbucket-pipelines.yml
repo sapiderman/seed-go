@@ -7,7 +7,6 @@ image: golang:latest
 definitions:
     buildtest: &buildtest |
         cp .env.example .env
-        go mod tidy
         go get -v golang.org/x/lint/golint
         go version
         go vet ./...
@@ -26,7 +25,7 @@ pipelines:
         master:
             - step:
                 script:
-                    - echo "Master pipeline triggerred"
+                    - echo "Master pipeline triggered"
                     - *buildtest
 
     pull-requests:

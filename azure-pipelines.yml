@@ -1,33 +1,32 @@
-################################################################################
+##########################################################################
 # azure-pipelines.com.yml
 # github.com/sapiderman/seed-go
 # https://docs.microsoft.com/azure/devops/pipelines/languages/go
-################################################################################
-name: $(Build.DefinitionName) - $(Date:ddMMyyy) Build $(BuildID)
+##########################################################################
+name: $(Build.DefinitionName) - $(Date:yyyMMdd) Build $(BuildID)
 
 trigger:
   branches:
     include:
       - '*'
-pr:
-  branches:
-    include:
-      - '*'      
-
-variables:
-  goVersion: '1.15.1'
-  imgName: 'seed-go-img'
 
 pool:
   vmImage: 'ubuntu-latest'
 
+resources:
+  repositories:
+    - repository: templates
+      name: sapiderman/pipeline
+      type: github
+      endpoint: sapiderman
+
 stages:
-  - stage: Test and Build
+  - stage: Test_and_Build
 
     jobs:
       - job: pull_request
         displayName: 'Build and Test for Pull Request'
-        condition: and(succeeded(), in(variables['Build.Reason'], 'Manual', 'PullRequest'))
+        condition: always() #and(succeeded(), in(variables['Build.Reason'], 'Manual', 'PullRequest'))
         timeoutInMinutes: 30
         steps:
         - task: GoTool@0
@@ -39,18 +38,19 @@ stages:
             command: 'get'
             arguments: '-d ./...'
             workingDirectory: '$(System.DefaultWorkingDirectory)'
-      
-        - template: build/azure/getDependencies.yml
-        - template: build/azure/doTests.yml
 
-        - template: build/azure/doBuild.yml
+        - template: azure/go/getDependencies.yml@templates
+        - template: azure/go/doTests.yml@templates
           parameters:
-            imgName: $(imgName)
+            testPath: $(testPath)
 
-        - template: build/azure/doBuildDocker.yml
+        - template: azure/go/doBuild.yml@templates
           parameters:
-            tag: '$(BuildID)'
+            imgName: $(imageName)
+            buildPath: $(buildPath)
+
+        - template: azure/go/doBuildDocker.yml@templates
+          parameters:
             dockerCommand: 'build'
-
-
-
+            dockerFile: $(dockerFile)
+            tag: $(Build.BuildID)
