@@ -47,10 +47,13 @@ stages:
         - template: azure/go/doBuild.yml@templates
           parameters:
             imgName: $(imageName)
-            buildPath: $(buildPath)
+            buildPath: $(buildPath)       
 
         - template: azure/go/doBuildDocker.yml@templates
           parameters:
-            dockerCommand: 'build'
+            containerRegistry: $(containerRegistry)
+            dockerRepository: $(dockerRepository)            
+            dockerCommand: 'buildAndPush'
             dockerFile: $(dockerFile)
             tag: $(Build.BuildID)
+            displayName: 'Build Docker and Push to DockerRegistry'
