@@ -1,5 +1,5 @@
 ##########################################################################
-# azure-pipelines.com.yml
+# azure-pipelines.yml
 # github.com/sapiderman/seed-go
 # https://docs.microsoft.com/azure/devops/pipelines/languages/go
 ##########################################################################
@@ -49,7 +49,7 @@ stages:
             imgName: $(imageName)
             buildPath: $(buildPath)       
 
-        - template: azure/go/doBuildDocker.yml@templates
+        - template: azure/docker/doBuildDocker.yml@templates
           parameters:
             containerRegistry: $(containerRegistry)
             dockerRepository: $(dockerRepository)            

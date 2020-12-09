@@ -13,5 +13,6 @@ currently being supported with security updates.
 
 Email vunerability to: tbd.xxx.xxx
 
-Security updates by: 
-1. Dependabot alerts
+Security updates by:  
+
+1. Dependabot alerts  
