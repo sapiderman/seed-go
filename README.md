@@ -6,11 +6,11 @@ Small starter project to play around with golang features, github actions and va
 
 ## Features
 
-| Features | Description |
-| :-------------    | :----------: |  
+| Features          | Description                                                 |
+| :-----------------| :---------------------------------------------------------: |  
 | gorilla mux       | [routing using gorilla mux](https://github.com/gorilla/mux) |  
-| contexts          | [contexts](https://golang.org/pkg/context/)|
-| logrus            | [logging library](https://github.com/sirupsen/logrus)|
+| contexts          | [contexts](https://golang.org/pkg/context/)                 |
+| logrus            | [logging library](https://github.com/sirupsen/logrus)        |
 | monitoring        | [elastic's application performance monitoring](https://www.elastic.co/guide/en/apm/agent/go/1.x/getting-started.html) |  
 | health check | [IETF RFC Health Ceck via nelkinda's health-go](https://tools.ietf.org/id/draft-inadarei-api-health-check-04.html)|
 | swagger api       | [API documentations using swagger swagger.io](https://swagger.io/specification/) |  
@@ -62,17 +62,30 @@ or
 
 ## project structure
 
-TBD.  
-[Golang Project Structure](https://tutorialedge.net/golang/go-project-structure-best-practices)  
-[Golang standard project layout ](https://github.com/golang-standards/project-layout)
+
+├── api  
+├── cmd  
+├── docs  
+└── internal   
+   
+| name          | descriptions                                       |  
+| :------------ | :------------------------------------------------: |
+| api           | swagger api, any protocol and schema file are here |  
+| cmd           | main application lives here                        |  
+| docs          | design and user documentations collected here      |  
+| internal      | interal application and libraries are here         |  
+  
+Further information see:  
+1. [Golang Project Structure](https://tutorialedge.net/golang/go-project-structure-best-practices)  
+2. [Golang standard project layout ](https://github.com/golang-standards/project-layout)  
 
 ## integrations  
 
 Using some free ci tools and code quality scanners.  There's some really great tools for public projects, trying them here.
 
-| Service           | Status       |
-| :-------------    | :----------: |
-| [github integations](www.github.com/features/actions)     |              |
+| Service           | Status                                               |
+| :-------------    | :-----------------------------------:                 |
+| [github integations](www.github.com/features/actions)     |               |
 | [github codeQL](![CodeQL](https://github.com/sapiderman/seed-go/workflows/CodeQL/badge.svg)) | ![CodeQL](https://github.com/sapiderman/seed-go/workflows/CodeQL/badge.svg) |
 | [azure](dev.azure.com) | [![Build Status](https://dev.azure.com/sapiderman/seed-go/_apis/build/status/sapiderman.seed-go?branchName=master)](https://dev.azure.com/sapiderman/seed-go/_build/latest?definitionId=1&branchName=master)               |
 | [circleci](circleci.com) | [![Build Status](https://travis-ci.com/sapiderman/seed-go.svg?branch=master)](https://travis-ci.com/sapiderman/seed-go) |
