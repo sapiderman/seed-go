@@ -66,7 +66,8 @@ or
 ├── api  
 ├── cmd  
 ├── docs  
-└── internal   
+├── internal
+└── web   
    
 | name          | descriptions                                       |  
 | :------------ | :------------------------------------------------: |
@@ -74,6 +75,7 @@ or
 | cmd           | main application lives here                        |  
 | docs          | design and user documentations collected here      |  
 | internal      | interal application and libraries are here         |  
+| web           | web static files, htmls and css stored here        |  
   
 Further information see:  
 1. [Golang Project Structure](https://tutorialedge.net/golang/go-project-structure-best-practices)  

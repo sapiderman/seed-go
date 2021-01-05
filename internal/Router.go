@@ -3,6 +3,7 @@ package internal
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/gorilla/mux"
@@ -41,6 +42,9 @@ func (r *Router) InitRoutes(ctx context.Context) {
 
 	// handle swagger api static files as /docs.
 	r.MuxRouter.PathPrefix("/docs").Handler(server.StaticFilter)
+
+	// static file handler
+	r.MuxRouter.PathPrefix("/web/").Handler(http.StripPrefix("/web/", http.FileServer(http.Dir("./web"))))
 
 	// v1 APIs
 	v1 := r.MuxRouter.PathPrefix("/v1").Subrouter()
