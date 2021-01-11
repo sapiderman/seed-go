@@ -28,7 +28,7 @@ func init() {
 	log.SetLevel(log.DebugLevel)
 }
 
-//Main entry point
+// Main entry point
 func main() {
 
 	// create config and config context
