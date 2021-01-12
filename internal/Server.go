@@ -10,9 +10,13 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/sapiderman/seed-go/api"
 	"github.com/sapiderman/seed-go/internal/config"
+	"github.com/sapiderman/seed-go/internal/handlers"
+	"github.com/sapiderman/seed-go/internal/logger"
 	log "github.com/sirupsen/logrus"
+	"go.elastic.co/apm/module/apmgorilla"
 )
 
 // Server struct is your server definitions, put your configs here
@@ -59,12 +63,54 @@ func NewServer(ctx context.Context) *Server {
 	return server
 }
 
+// Router stores the Mux instance.
+type Router struct {
+	MuxRouter *mux.Router
+}
+
+// NewRouter instantiates and returns new Router
+func NewRouter() *Router {
+
+	return &Router{
+		MuxRouter: mux.NewRouter(),
+	}
+}
+
+// InitRoutes creates our routes
+func (r *Router) InitRoutes(ctx context.Context) {
+
+	fmt.Println("initializing routes")
+	server := ctx.Value(ContextKey(ServerKey)).(*Server)
+
+	// middlewares
+	r.MuxRouter.Use(apmgorilla.Middleware()) //	apmgorilla.Instrument(r.MuxRouter) // elastic apm
+	r.MuxRouter.Use(logger.MyLogger)         // ye-olde logger
+
+	// health check endpoint. Not in a version path as it will seems to be a permanent endpoint (famous last words)
+	h := handlers.NewHealth(ctx)
+	r.MuxRouter.HandleFunc("/health", h.Handler)
+
+	// handle swagger api static files as /docs.
+	r.MuxRouter.PathPrefix("/docs").Handler(server.StaticFilter)
+
+	// static file handler
+	r.MuxRouter.PathPrefix("/web/").Handler(http.StripPrefix("/web/", http.FileServer(http.Dir("./web"))))
+
+	// v1 APIs
+	v1 := r.MuxRouter.PathPrefix("/v1").Subrouter()
+	v1.HandleFunc("/hello", handlers.HandlerHello).Methods("GET")
+
+	// display routes
+	walk(*r.MuxRouter)
+
+}
+
 // StartServer starts listening at given port
 func (ws *Server) StartServer(ctx context.Context) {
 
 	var wait time.Duration
 
-	log.Info("initiaing server...")
+	log.Info("initializing server...")
 
 	serverCtxKey := ContextKey(ServerKey)
 	serverCtx := context.WithValue(ctx, serverCtxKey, ws)
@@ -98,4 +144,36 @@ func (ws *Server) StartServer(ctx context.Context) {
 	// to finalize based on context cancellation.
 	log.Info("shutting down........ byee")
 	os.Exit(0)
+}
+
+// walk runs the mux.Router.Walk method to print all the registerd routes
+func walk(r mux.Router) {
+	err := r.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+		pathTemplate, err := route.GetPathTemplate()
+		if err == nil {
+			fmt.Println("ROUTE:", pathTemplate)
+		}
+		pathRegexp, err := route.GetPathRegexp()
+		if err == nil {
+			fmt.Println("Path regexp:", pathRegexp)
+		}
+		queriesTemplates, err := route.GetQueriesTemplates()
+		if err == nil {
+			fmt.Println("Queries templates:", strings.Join(queriesTemplates, ","))
+		}
+		queriesRegexps, err := route.GetQueriesRegexp()
+		if err == nil {
+			fmt.Println("Queries regexps:", strings.Join(queriesRegexps, ","))
+		}
+		methods, err := route.GetMethods()
+		if err == nil {
+			fmt.Println("Methods:", strings.Join(methods, ","))
+		}
+		fmt.Println()
+		return nil
+	})
+
+	if err != nil {
+		fmt.Println(err)
+	}
 }
