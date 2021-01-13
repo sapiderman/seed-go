@@ -1,47 +1,102 @@
 package config
 
-import "os"
+import (
+	"strconv"
+	"strings"
 
-// Configuration object for app wide config
-type Configuration struct {
-	AppName string
-	Server  Server
-	Logger  Logger
-}
+	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
+)
 
-// Server config
-type Server struct {
-	Host string
-	Port string
-}
-
-// Logger config
-type Logger struct {
-	Level  string
-	Format string
-}
-
-func getEnv(key, fallback string) string {
-	if value, ok := os.LookupEnv(key); ok {
-		return value
-	}
-	return fallback
-}
+var (
+	defCfg      map[string]string
+	initialized = false
+)
 
 // LoadConfig loads configuration file
-func LoadConfig() *Configuration {
+func LoadConfig() {
 
-	config := &Configuration{
-		AppName: getEnv("NAME", "seed-go-template"),
-		Server: Server{
-			Host: getEnv("HOST", "0.0.0.0"),
-			Port: getEnv("PORT", "7000"),
-		},
-		Logger: Logger{
-			Level:  "info",
-			Format: "",
-		},
+	log.Info("loading config...")
+
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	viper.AutomaticEnv()
+	defCfg = make(map[string]string)
+
+	defCfg["server.host"] = "localhost"
+	defCfg["server.port"] = "7000"
+	defCfg["server.log.level"] = "debug" // valid values are trace, debug, info, warn, error, fatal
+	defCfg["server.timeout.write"] = "15 seconds"
+	defCfg["server.timeout.read"] = "15 seconds"
+	defCfg["server.timeout.idle"] = "60 seconds"
+	defCfg["server.timeout.graceshut"] = "15 seconds"
+
+	for k := range defCfg {
+		err := viper.BindEnv(k)
+		if err != nil {
+			log.Errorf("Failed to bind env \"%s\" into configuration. Got %s", k, err)
+		}
 	}
 
-	return config
+	initialized = true
+}
+
+// SetConfig put configuration key value
+func SetConfig(key, value string) {
+	viper.Set(key, value)
+}
+
+// Get fetch configuration as string value
+func Get(key string) string {
+	if !initialized {
+		LoadConfig()
+	}
+	ret := viper.GetString(key)
+	if len(ret) == 0 {
+		if ret, ok := defCfg[key]; ok {
+			return ret
+		}
+		log.Debugf("%s config key not found", key)
+	}
+	return ret
+}
+
+// GetBoolean fetch configuration as boolean value
+func GetBoolean(key string) bool {
+	if len(Get(key)) == 0 {
+		return false
+	}
+	b, err := strconv.ParseBool(Get(key))
+	if err != nil {
+		panic(err)
+	}
+	return b
+}
+
+// GetInt fetch configuration as integer value
+func GetInt(key string) int {
+	if len(Get(key)) == 0 {
+		return 0
+	}
+	i, err := strconv.ParseInt(Get(key), 10, 64)
+	if err != nil {
+		panic(err)
+	}
+	return int(i)
+}
+
+// GetFloat fetch configuration as float value
+func GetFloat(key string) float64 {
+	if len(Get(key)) == 0 {
+		return 0
+	}
+	f, err := strconv.ParseFloat(Get(key), 64)
+	if err != nil {
+		panic(err)
+	}
+	return f
+}
+
+// Set configuration key value
+func Set(key, value string) {
+	defCfg[key] = value
 }

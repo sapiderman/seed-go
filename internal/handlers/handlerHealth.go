@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"context"
-
 	"github.com/nelkinda/health-go"
 	"github.com/nelkinda/health-go/checks/sysinfo"
 	"github.com/nelkinda/health-go/checks/uptime"
@@ -20,7 +18,7 @@ import (
 // func HandlerHealth(w http.ResponseWriter, s *http.Request) {} : DISABLED, using health-go lib below
 
 // NewHealth returns a new instance of health ervice
-func NewHealth(ctx context.Context) *health.Service {
+func NewHealth() *health.Service {
 
 	return health.New(
 		health.Health{Version: "1", ReleaseID: "1.0.0-SNAPSHOT"},

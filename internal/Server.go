@@ -19,6 +19,8 @@ import (
 	"go.elastic.co/apm/module/apmgorilla"
 )
 
+var server Server
+
 // Server struct is your server definitions, put your configs here
 type Server struct {
 	Host string
@@ -38,15 +40,15 @@ type Server struct {
 }
 
 // NewServer initializes server object
-func NewServer(ctx context.Context) *Server {
+func NewServer() *Server {
 
-	cfg := ctx.Value(ContextKey(ConfigKey)).(*config.Configuration)
-	server := &Server{
-		Router: NewRouter(),
-	}
+	// cfg := ctx.Value(ContextKey(ConfigKey)).(*config.Configuration)
+	server.Router = NewRouter()
+
+	address := fmt.Sprintf("%s:%s", config.Get("server.host"), config.Get("server.port"))
 
 	server.HTTPServer = &http.Server{
-		Addr: fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port),
+		Addr: address,
 		// Good practice to set timeouts to avoid Slowloris attacks.
 		WriteTimeout: time.Second * 15,
 		ReadTimeout:  time.Second * 15,
@@ -60,7 +62,7 @@ func NewServer(ctx context.Context) *Server {
 	server.StartUpTime = time.Now()
 	server.ServerVersion = strings.Join([]string{VersionBuild, VersionMinor, VersionPatch}, ".")
 
-	return server
+	return &server
 }
 
 // Router stores the Mux instance.
@@ -77,21 +79,20 @@ func NewRouter() *Router {
 }
 
 // InitRoutes creates our routes
-func (r *Router) InitRoutes(ctx context.Context) {
+func (r *Router) InitRoutes() {
 
 	fmt.Println("initializing routes")
-	server := ctx.Value(ContextKey(ServerKey)).(*Server)
 
 	// middlewares
 	r.MuxRouter.Use(apmgorilla.Middleware()) //	apmgorilla.Instrument(r.MuxRouter) // elastic apm
 	r.MuxRouter.Use(logger.MyLogger)         // ye-olde logger
 
 	// health check endpoint. Not in a version path as it will seems to be a permanent endpoint (famous last words)
-	h := handlers.NewHealth(ctx)
+	h := handlers.NewHealth()
 	r.MuxRouter.HandleFunc("/health", h.Handler)
 
 	// handle swagger api static files as /docs.
-	r.MuxRouter.PathPrefix("/docs").Handler(server.StaticFilter)
+	// r.MuxRouter.PathPrefix("/docs").Handler(r.StaticFilter)
 
 	// static file handler
 	r.MuxRouter.PathPrefix("/web/").Handler(http.StripPrefix("/web/", http.FileServer(http.Dir("./web"))))
@@ -106,19 +107,20 @@ func (r *Router) InitRoutes(ctx context.Context) {
 }
 
 // StartServer starts listening at given port
-func (ws *Server) StartServer(ctx context.Context) {
+func StartServer() {
 
 	var wait time.Duration
 
 	log.Info("initializing server...")
+	server := NewServer()
 
-	serverCtxKey := ContextKey(ServerKey)
-	serverCtx := context.WithValue(ctx, serverCtxKey, ws)
-	ws.Router.InitRoutes(serverCtx)
+	// serverCtxKey := ContextKey(ServerKey)
+	// serverCtx := context.WithValue(ctx, serverCtxKey, ws)
+	server.Router.InitRoutes()
 
 	// Run our server in a goroutine so that it doesn't block.
 	go func() {
-		if err := ws.HTTPServer.ListenAndServe(); err != nil {
+		if err := server.HTTPServer.ListenAndServe(); err != nil {
 			log.Println(err)
 		}
 	}()
@@ -138,7 +140,7 @@ func (ws *Server) StartServer(ctx context.Context) {
 	defer cancel()
 	// Doesn't block if no connections, but will otherwise wait
 	// until the timeout deadline.
-	ws.HTTPServer.Shutdown(ctx)
+	server.HTTPServer.Shutdown(ctx)
 	// Optionally, you could run srv.Shutdown in a goroutine and block on
 	// <-ctx.Done() if your application should wait for other services
 	// to finalize based on context cancellation.
