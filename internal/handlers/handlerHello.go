@@ -16,7 +16,6 @@ func HandlerHello(w http.ResponseWriter, s *http.Request) {
 	_, err := w.Write(resp)
 	if err != nil {
 		fmt.Println("resp error: ", err)
-
 	}
 
 }
