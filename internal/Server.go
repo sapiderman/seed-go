@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"net/http"
 	"os"
@@ -31,6 +32,8 @@ type Server struct {
 	Router       *mux.Router
 	StaticFilter *api.StaticFilter
 
+	DB *sql.DB
+
 	// add aditional components here
 	// Monitor	*Monitor
 	// Database	*Database
@@ -41,7 +44,7 @@ type Server struct {
 func NewServer() *Server {
 
 	// cfg := ctx.Value(ContextKey(ConfigKey)).(*config.Configuration)
-	server.Router := mux.NewRouter()
+	server.Router = mux.NewRouter()
 
 	address := fmt.Sprintf("%s:%s", config.Get("server.host"), config.Get("server.port"))
 

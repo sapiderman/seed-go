@@ -2,9 +2,12 @@ package internal
 
 import (
 	"encoding/json"
+	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/gorilla/mux"
+	"github.com/sapiderman/seed-go/internal/handlers"
 	"github.com/sirupsen/logrus"
 )
 
@@ -22,22 +25,37 @@ func pretifyJSON(sjson string) string {
 }
 
 func TestAll(t *testing.T) {
+	var srv Server
+
 	logrus.SetLevel(logrus.TraceLevel)
 
-	r := NewRouter()
+	srv.Router = mux.NewRouter()
+	h := handlers.NewHealth()
+	srv.Router.HandleFunc("/health", h.Handler)
+	srv.HealthCheckTesting(t)
 
-	r.HealthCheckTesting(t)
+	srv.NoRouteTesting(t)
 }
 
-func (r *Router) HealthCheckTesting(t *testing.T) {
+func (s *Server) HealthCheckTesting(t *testing.T) {
 	t.Log("Testing HealthCheck")
 	recorder := httptest.NewRecorder()
 	healthRequest := httptest.NewRequest("GET", "/health", nil)
-	r.MuxRouter.ServeHTTP(recorder, healthRequest)
-	// if recorder.Code != http.StatusOK {
-	// 	t.Errorf("expecting healthcheck status 200 but %d", recorder.Code)
-	// 	t.FailNow()
-	// } else {
-	// 	t.Log(pretifyJSON(recorder.Body.String()))
-	// }
+	s.Router.ServeHTTP(recorder, healthRequest)
+	if recorder.Code != http.StatusOK {
+		t.Errorf("expecting healthcheck status 200 but %d", recorder.Code)
+		t.FailNow()
+	}
+}
+
+func (s *Server) NoRouteTesting(t *testing.T) {
+
+	t.Log("Testing nonexistent route")
+	recorder := httptest.NewRecorder()
+	request := httptest.NewRequest("GET", "/nonexistent", nil)
+	s.Router.ServeHTTP(recorder, request)
+	if recorder.Code == http.StatusOK {
+		t.Errorf("expecting healthcheck status 404 but %d", recorder.Code)
+		t.FailNow()
+	}
 }
