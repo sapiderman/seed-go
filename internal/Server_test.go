@@ -33,8 +33,14 @@ func TestAll(t *testing.T) {
 	h := handlers.NewHealth()
 	srv.Router.HandleFunc("/health", h.Handler)
 	srv.HealthCheckTesting(t)
-
 	srv.NoRouteTesting(t)
+
+	v1 := srv.Router.PathPrefix("/v1").Subrouter()
+	v1.HandleFunc("/hello", handlers.HandlerHello).Methods("GET")
+	v1.HandleFunc("/time", handlers.HandlerGetTime).Methods("GET")
+
+	srv.HelloHandlerTesting(t)
+	srv.TimeHandlerTesting(t)
 }
 
 func (s *Server) HealthCheckTesting(t *testing.T) {
@@ -55,7 +61,33 @@ func (s *Server) NoRouteTesting(t *testing.T) {
 	request := httptest.NewRequest("GET", "/nonexistent", nil)
 	s.Router.ServeHTTP(recorder, request)
 	if recorder.Code == http.StatusOK {
-		t.Errorf("expecting healthcheck status 404 but %d", recorder.Code)
+		t.Errorf("expecting http status 404 but got %d", recorder.Code)
 		t.FailNow()
 	}
+}
+
+func (s *Server) HelloHandlerTesting(t *testing.T) {
+
+	t.Log("Testing /v1/hello")
+	recorder := httptest.NewRecorder()
+	request := httptest.NewRequest("GET", "/v1/hello", nil)
+	s.Router.ServeHTTP(recorder, request)
+	if recorder.Code != http.StatusOK {
+		t.Errorf("expecting status 200 but got %d", recorder.Code)
+		t.FailNow()
+	}
+
+}
+
+func (s *Server) TimeHandlerTesting(t *testing.T) {
+
+	t.Log("Testing /v1/time")
+	recorder := httptest.NewRecorder()
+	request := httptest.NewRequest("GET", "/v1/time", nil)
+	s.Router.ServeHTTP(recorder, request)
+	if recorder.Code != http.StatusOK {
+		t.Errorf("expecting http status 200 but got %d", recorder.Code)
+		t.FailNow()
+	}
+
 }

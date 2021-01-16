@@ -33,6 +33,7 @@ func InitRoutes(r *mux.Router) {
 	// v1 APIs
 	v1 := r.PathPrefix("/v1").Subrouter()
 	v1.HandleFunc("/hello", handlers.HandlerHello).Methods("GET")
+	v1.HandleFunc("/time", handlers.HandlerGetTime).Methods("GET")
 
 	// display routes
 	walk(*r)
