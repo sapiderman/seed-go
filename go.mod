@@ -8,5 +8,5 @@ require (
 	github.com/nelkinda/health-go v0.0.1
 	github.com/sirupsen/logrus v1.7.0
 	github.com/spf13/viper v1.7.1
-	go.elastic.co/apm/module/apmgorilla v1.9.0
+	go.elastic.co/apm/module/apmgorilla v1.10.0
 )
