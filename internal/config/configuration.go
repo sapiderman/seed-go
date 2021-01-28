@@ -30,6 +30,11 @@ func LoadConfig() {
 	defCfg["server.timeout.idle"] = "60 seconds"
 	defCfg["server.timeout.graceshut"] = "15 seconds"
 
+	defCfg["psql.dbname"] = "mudb"
+	defCfg["psql.user"] = "budhi"
+	defCfg["psql.host"] = "localshot"
+	defCfg["psql.port"] = "5432"
+
 	for k := range defCfg {
 		err := viper.BindEnv(k)
 		if err != nil {
