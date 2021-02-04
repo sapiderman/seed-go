@@ -30,8 +30,9 @@ func LoadConfig() {
 	defCfg["server.timeout.idle"] = "60 seconds"
 	defCfg["server.timeout.graceshut"] = "15 seconds"
 
-	defCfg["psql.dbname"] = "mudb"
-	defCfg["psql.user"] = "budhi"
+	defCfg["psql.dbname"] = "mydb"
+	defCfg["psql.user"] = "seeduser"
+	defCfg["psql.pass"] = "seeduser123"
 	defCfg["psql.host"] = "localshot"
 	defCfg["psql.port"] = "5432"
 

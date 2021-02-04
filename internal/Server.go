@@ -14,6 +14,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/sapiderman/seed-go/api"
 	"github.com/sapiderman/seed-go/internal/config"
+	"github.com/sapiderman/seed-go/internal/connector"
 	"github.com/sapiderman/seed-go/internal/router"
 	log "github.com/sirupsen/logrus"
 )
@@ -77,6 +78,9 @@ func StartServer() {
 	// serverCtxKey := ContextKey(ServerKey)
 	// serverCtx := context.WithValue(ctx, serverCtxKey, ws)
 	router.InitRoutes(server.Router)
+
+	log.Info("connecting database...")
+	server.DB = connector.GetDBInstance()
 
 	// Run our server in a goroutine so that it doesn't block.
 	go func() {
