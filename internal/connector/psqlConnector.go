@@ -49,6 +49,7 @@ func GetDBInstance() *sql.DB {
 		config.Get("psql.host"), config.Get("psql.port"), config.Get("psql.user"), config.Get("psql.pass"), config.Get("psql.dbname"))
 	db, err := sql.Open("postgres", psgqlConnectStr)
 	if err != nil {
+
 		log.Error(err)
 	}
 	defer db.Close()
@@ -60,4 +61,34 @@ func GetDBInstance() *sql.DB {
 	}
 
 	return db
+}
+
+// DropAllTables initializes the
+func DropAllTables(db *sql.DB) error {
+
+	_, err := db.Exec(CreateTblDevice)
+	if err != nil {
+		log.Warn(err)
+		return err
+	}
+
+	return nil
+}
+
+// CreateAllTables initializes the
+func CreateAllTables(db *sql.DB) error {
+
+	_, err := db.Exec(CreateTblUser)
+	if err != nil {
+		log.Warn(err)
+		return err
+	}
+
+	_, err = db.Exec(DropAllTblSQL)
+	if err != nil {
+		log.Warn(err)
+		return err
+	}
+
+	return nil
 }
