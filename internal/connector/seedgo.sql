@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS users, device;
 
 CREATE TABLE IF NOT EXISTS users (
     id INT PRIMARY KEY,

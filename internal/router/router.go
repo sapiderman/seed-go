@@ -9,12 +9,14 @@ import (
 	"github.com/sapiderman/seed-go/internal/handlers"
 	"github.com/sapiderman/seed-go/internal/logger"
 	"go.elastic.co/apm/module/apmgorilla"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // InitRoutes creates our routes
 func InitRoutes(r *mux.Router) {
 
-	fmt.Println("initializing routes")
+	log.Info("initializing routes")
 
 	// middlewares
 	r.Use(apmgorilla.Middleware()) //	apmgorilla.Instrument(r.MuxRouter) // elastic apm

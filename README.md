@@ -74,7 +74,7 @@ or
 | api           | swagger api, any protocol and schema file are here |  
 | cmd           | main application lives here                        |  
 | docs          | design and user documentations collected here      |  
-| internal      | interal application and libraries are here         |  
+| internal      | internal application and libraries are here         |  
 | web           | web static files, htmls and css stored here        |  
   
 Further information see:  
