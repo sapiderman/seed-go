@@ -33,7 +33,7 @@ func LoadConfig() {
 	defCfg["psql.dbname"] = "mydb"
 	defCfg["psql.user"] = "seeduser"
 	defCfg["psql.pass"] = "seeduser123"
-	defCfg["psql.host"] = "localshot"
+	defCfg["psql.host"] = "localhost"
 	defCfg["psql.port"] = "5432"
 
 	for k := range defCfg {

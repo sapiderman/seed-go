@@ -5,8 +5,9 @@ IMAGE_NAME ?= seed-go-img
 
 .PHONY: all test clean build docker
 
-build: 
-	go build -a -o $(IMAGE_NAME) cmd/Main.go
+build: build-static
+	#go build -a -o $(IMAGE_NAME) cmd/Main.go
+	GO_ENABLED=0 go build -a -ldflags '-extldflags "-static"' -o $(IMAGE_NAME) cmd/Main.go
 
 build-static:
 	go-resource -base "$(CURRENT_PATH)/api/swagger" -path "/docs" -filter "/**/*" -go "$(CURRENT_PATH)/api/StaticApi.go" -package api

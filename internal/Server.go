@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/sapiderman/seed-go/api"
 	"github.com/sapiderman/seed-go/internal/config"
 	"github.com/sapiderman/seed-go/internal/connector"
 	"github.com/sapiderman/seed-go/internal/router"
@@ -29,9 +28,8 @@ type Server struct {
 	StartUpTime   time.Time
 	ServerVersion string
 
-	HTTPServer   *http.Server
-	Router       *mux.Router
-	StaticFilter *api.StaticFilter
+	HTTPServer *http.Server
+	Router     *mux.Router
 
 	DB *sql.DB
 
@@ -59,7 +57,6 @@ func NewServer() *Server {
 	}
 
 	// set our handler for static files
-	server.StaticFilter = api.NewStaticFilter()
 
 	server.StartUpTime = time.Now()
 	server.ServerVersion = strings.Join([]string{VersionBuild, VersionMinor, VersionPatch}, ".")

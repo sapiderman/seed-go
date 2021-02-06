@@ -23,8 +23,11 @@ todo:
 
 ## endpoints
 
-GET /health  
+GET /health 
+GET /docs   
 GET /v1/hello  
+GET /v1/time 
+GET /web/ 
 
 ## build
 

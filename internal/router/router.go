@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
+	"github.com/sapiderman/seed-go/api"
 	"github.com/sapiderman/seed-go/internal/handlers"
 	"github.com/sapiderman/seed-go/internal/logger"
 	"go.elastic.co/apm/module/apmgorilla"
@@ -27,7 +28,10 @@ func InitRoutes(r *mux.Router) {
 	r.HandleFunc("/health", h.Handler)
 
 	// handle swagger api static files as /docs.
-	// r.MuxRouter.PathPrefix("/docs").Handler(r.StaticFilter)
+	// r.HandleFunc("/docs", api.ServeStatic).Methods("GET")
+	for path := range api.StaticResources {
+		r.HandleFunc(path, api.ServeStatic).Methods("GET")
+	}
 
 	// static file handler
 	r.PathPrefix("/web/").Handler(http.StripPrefix("/web/", http.FileServer(http.Dir("./web"))))
