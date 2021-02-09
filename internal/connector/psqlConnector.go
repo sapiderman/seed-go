@@ -12,10 +12,10 @@ import (
 
 const (
 	// DropAllTblSQL drops all table
-	DropAllTblSQL = `DROP TABLE IF EXISTS users, device;`
+	DropAllTblSQL = `DROP TABLE IF EXISTS users, devices;`
 
-	// CreateTblUser creates user table
-	CreateTblUser = `CREATE TABLE IF NOT EXISTS users (
+	// CreateTblUsersSQL creates user table
+	CreateTblUsersSQL = `CREATE TABLE IF NOT EXISTS users (
 		id INT PRIMARY KEY,
 		created_at TIMESTAMPTZ,
 		updated_at TIMESTAMPTZ,
@@ -28,8 +28,8 @@ const (
 		device INT REFERENCES device(id)
 		);`
 
-	// CreateTblDevice creates device table
-	CreateTblDevice = `CREATE TABLE IF NOT EXISTS device (
+	// CreateTblDevicesSQL creates device table
+	CreateTblDevicesSQL = `CREATE TABLE IF NOT EXISTS devices (
 		id INT PRIMARY KEY,
 		created_at TIMESTAMPTZ,
 		updated_at TIMESTAMPTZ,
@@ -40,6 +40,8 @@ const (
 		push_notif_id VARCHAR,
 		device_id VARCHAR
 );`
+	// SelectAllUserSQL queries user table
+	SelectAllUserSQL = `SELECT * from users`
 )
 
 // GetDBInstance create db instance
@@ -66,7 +68,7 @@ func GetDBInstance() *sql.DB {
 // DropAllTables initializes the
 func DropAllTables(db *sql.DB) error {
 
-	_, err := db.Exec(CreateTblDevice)
+	_, err := db.Exec(DropAllTblSQL)
 	if err != nil {
 		log.Warn(err)
 		return err
@@ -78,13 +80,25 @@ func DropAllTables(db *sql.DB) error {
 // CreateAllTables initializes the
 func CreateAllTables(db *sql.DB) error {
 
-	_, err := db.Exec(CreateTblUser)
+	_, err := db.Exec(CreateTblUsersSQL)
 	if err != nil {
 		log.Warn(err)
 		return err
 	}
 
-	_, err = db.Exec(DropAllTblSQL)
+	_, err = db.Exec(CreateTblDevicesSQL)
+	if err != nil {
+		log.Warn(err)
+		return err
+	}
+
+	return nil
+}
+
+// ListAllUsers list all users
+func ListAllUsers(db *sql.DB) error {
+
+	_, err := db.Exec(SelectAllUserSQL)
 	if err != nil {
 		log.Warn(err)
 		return err
