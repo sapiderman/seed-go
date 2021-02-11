@@ -5,8 +5,8 @@ import (
 	"net/http"
 )
 
-// HandlerHello handles /hello calls
-func HandlerHello(w http.ResponseWriter, s *http.Request) {
+// Hello handles /hello calls
+func Hello(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusOK)

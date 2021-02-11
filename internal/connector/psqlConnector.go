@@ -1,14 +1,43 @@
 package connector
 
 import (
-	"database/sql"
 	"fmt"
 
-	// use postgress init
+	"github.com/jmoiron/sqlx"
+
+	// use postgresql init
 	_ "github.com/lib/pq"
+
 	"github.com/sapiderman/seed-go/internal/config"
 	log "github.com/sirupsen/logrus"
 )
+
+// User model for storing user table rows
+type User struct {
+	id        string
+	createdAt string
+	updatedat string
+	deletedAt string
+	username  string
+	phone     string
+	email     string
+	password  string
+	pin       int
+	device    string
+}
+
+// Device model for storing device table rows
+type Device struct {
+	id          string
+	createdAt   string
+	updatedAt   string
+	deletedAt   string
+	phoneBrand  string
+	phoneModel  string
+	year        string
+	pushNotifID string
+	deviceID    string
+}
 
 const (
 	// DropAllTblSQL drops all table
@@ -39,34 +68,44 @@ const (
 		year VARCHAR(100) NOT NULL ,
 		push_notif_id VARCHAR,
 		device_id VARCHAR
-);`
+		);`
 	// SelectAllUserSQL queries user table
 	SelectAllUserSQL = `SELECT * from users`
+
+	// SelectAllDeviceSQL queries device table
+	SelectAllDeviceSQL = `SELECT * from device`
 )
 
-// GetDBInstance create db instance
-func GetDBInstance() *sql.DB {
+var (
+	//DB instance
+	db *sqlx.DB
+)
+
+// InitializeDBInstance create db instance
+func InitializeDBInstance() error {
 
 	psgqlConnectStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
 		config.Get("psql.host"), config.Get("psql.port"), config.Get("psql.user"), config.Get("psql.pass"), config.Get("psql.dbname"))
-	db, err := sql.Open("postgres", psgqlConnectStr)
+	db, err := sqlx.Connect("postgres", psgqlConnectStr)
 	if err != nil {
 
-		log.Error(err)
+		log.Error("Connection to database error: ", err)
+		return err
 	}
 	defer db.Close()
 
-	// ensure connection
+	// ensure connection works
 	err = db.Ping()
 	if err != nil {
-		log.Error(err)
+		log.Error("Ping to daabase error: ", err)
+		return err
 	}
 
-	return db
+	return nil
 }
 
 // DropAllTables initializes the
-func DropAllTables(db *sql.DB) error {
+func DropAllTables(db *sqlx.DB) error {
 
 	_, err := db.Exec(DropAllTblSQL)
 	if err != nil {
@@ -78,7 +117,7 @@ func DropAllTables(db *sql.DB) error {
 }
 
 // CreateAllTables initializes the
-func CreateAllTables(db *sql.DB) error {
+func CreateAllTables(db *sqlx.DB) error {
 
 	_, err := db.Exec(CreateTblUsersSQL)
 	if err != nil {
@@ -96,13 +135,57 @@ func CreateAllTables(db *sql.DB) error {
 }
 
 // ListAllUsers list all users
-func ListAllUsers(db *sql.DB) error {
+func ListAllUsers() ([]User, error) {
 
-	_, err := db.Exec(SelectAllUserSQL)
+	users := []User{}
+
+	//_ , err := db.Exec(SelectAllUserSQL)
+	err := db.Select(&users, SelectAllUserSQL)
+	if err != nil {
+		log.Warn(err)
+		return nil, err
+	}
+
+	log.Info("got it:", users)
+	return users, nil
+}
+
+// InsertUser inserts a single user to the database
+func InsertUser(users *User) error {
+
+	_, err := db.NamedExec(`INSERT INTO user () VALUES ()`, users)
 	if err != nil {
 		log.Warn(err)
 		return err
 	}
+
+	return nil
+}
+
+// ListAllDevices list all devices
+func ListAllDevices() ([]Device, error) {
+
+	devices := []Device{}
+
+	//_ , err := db.Exec(SelectAllUserSQL)
+	err := db.Select(&devices, SelectAllDeviceSQL)
+	if err != nil {
+		log.Warn(err)
+		return nil, err
+	}
+
+	return devices, nil
+}
+
+// InsertDevice a record into device table
+func InsertDevice(dev Device) error {
+
+	//_ , err := db.Exec(SelectAllUserSQL)
+	// err := db.Select(&devices, SelectAllDeviceSQL)
+	// if err != nil {
+	// 	log.Warn(err)
+	// 	return  err
+	// }
 
 	return nil
 }

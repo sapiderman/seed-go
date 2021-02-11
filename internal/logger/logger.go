@@ -19,9 +19,9 @@ func MyLogger(next http.Handler) http.Handler {
 				"method": r.Method,
 				"path":   r.URL.Path,
 				"header": r.Header,
-			})
+			}).Debug("Logger")
 			//.Info("Logger")
-			// }).Debug("Logger")
+
 		}
 		// Call the next handler, which can be another middleware in the chain, or the final handler.
 		next.ServeHTTP(w, r)

@@ -25,3 +25,5 @@ CREATE TABLE IF NOT EXISTS device (
     push_notif_id VARCHAR,
     device_id VARCHAR
 );
+
+

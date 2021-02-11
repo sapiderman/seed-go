@@ -2,12 +2,10 @@ package internal
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 	"time"
 
@@ -31,22 +29,27 @@ type Server struct {
 	HTTPServer *http.Server
 	Router     *mux.Router
 
-	DB *sql.DB
-
 	// add aditional components here
 	// Monitor	*Monitor
 	// Database	*Database
 	// MessageQ *MessageQ
 }
 
-// NewServer initializes server object
-func NewServer() *Server {
+// StartServer starts listening at given port
+func StartServer() {
 
-	// cfg := ctx.Value(ContextKey(ConfigKey)).(*config.Configuration)
+	var wait time.Duration
+
+	log.Info("initializing server...")
 	server.Router = mux.NewRouter()
 
-	address := fmt.Sprintf("%s:%s", config.Get("server.host"), config.Get("server.port"))
+	log.Info("initializing routes...")
+	router.InitRoutes(server.Router)
 
+	log.Info("connecting database...")
+	connector.InitializeDBInstance()
+
+	address := fmt.Sprintf("%s:%s", config.Get("server.host"), config.Get("server.port"))
 	server.HTTPServer = &http.Server{
 		Addr: address,
 		// Good practice to set timeouts to avoid Slowloris attacks.
@@ -56,29 +59,8 @@ func NewServer() *Server {
 		Handler:      server.Router, // Pass our instance of gorilla/mux in.
 	}
 
-	// set our handler for static files
-
-	server.StartUpTime = time.Now()
-	server.ServerVersion = strings.Join([]string{VersionBuild, VersionMinor, VersionPatch}, ".")
-
-	return &server
-}
-
-// StartServer starts listening at given port
-func StartServer() {
-
-	var wait time.Duration
-
-	log.Info("initializing server...")
-	server := NewServer()
-
-	// serverCtxKey := ContextKey(ServerKey)
-	// serverCtx := context.WithValue(ctx, serverCtxKey, ws)
-	router.InitRoutes(server.Router)
-
-	log.Info("connecting database...")
-	server.DB = connector.GetDBInstance()
-
+	log.Info("starting server...")
+	log.Info("listening at %s", address)
 	// Run our server in a goroutine so that it doesn't block.
 	go func() {
 		if err := server.HTTPServer.ListenAndServe(); err != nil {

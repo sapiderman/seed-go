@@ -17,15 +17,26 @@ import (
 // InitRoutes creates our routes
 func InitRoutes(r *mux.Router) {
 
-	log.Info("initializing routes")
-
-	// middlewares
-	r.Use(apmgorilla.Middleware()) //	apmgorilla.Instrument(r.MuxRouter) // elastic apm
+	// register middlewares
+	r.Use(apmgorilla.Middleware()) // apmgorilla.Instrument(r.MuxRouter) // elastic apm
 	r.Use(logger.MyLogger)         // ye-olde logger
 
 	// health check endpoint. Not in a version path as it will seems to be a permanent endpoint (famous last words)
 	h := handlers.NewHealth()
 	r.HandleFunc("/health", h.Handler)
+
+	// v1 APIs
+	v1 := r.PathPrefix("/v1").Subrouter()
+	v1.HandleFunc("/hello", handlers.Hello).Methods("GET")
+	v1.HandleFunc("/time", handlers.GetTime).Methods("GET")
+	v1.HandleFunc("/users", handlers.ListUsers).Methods("GET")
+	v1.HandleFunc("/devices", handlers.ListDevices).Methods("GET")
+
+	v1.HandleFunc("/user", handlers.AddUser).Methods("POST")
+	v1.HandleFunc("/device", handlers.AddDevice).Methods("POST")
+
+	// static file handler
+	r.PathPrefix("/web/").Handler(http.StripPrefix("/web/", http.FileServer(http.Dir("./web"))))
 
 	// handle swagger api static files as /docs.
 	// r.HandleFunc("/docs", api.ServeStatic).Methods("GET")
@@ -33,17 +44,12 @@ func InitRoutes(r *mux.Router) {
 		r.HandleFunc(path, api.ServeStatic).Methods("GET")
 	}
 
-	// static file handler
-	r.PathPrefix("/web/").Handler(http.StripPrefix("/web/", http.FileServer(http.Dir("./web"))))
-
-	// v1 APIs
-	v1 := r.PathPrefix("/v1").Subrouter()
-	v1.HandleFunc("/hello", handlers.HandlerHello).Methods("GET")
-	v1.HandleFunc("/time", handlers.HandlerGetTime).Methods("GET")
+	// r.NotFoundHandler = http.HandlerFunc(handlers.HandlerNotFound)
+	// r.HandleFunc("/", handlers.HandlerNotFound)
+	// http.Handle("/", http.FileServer(http.Dir("./static/404.html")))
 
 	// display routes
 	walk(*r)
-
 }
 
 // walk runs the mux.Router.Walk method to print all the registerd routes
@@ -74,6 +80,6 @@ func walk(r mux.Router) {
 	})
 
 	if err != nil {
-		fmt.Println(err)
+		log.Error(err)
 	}
 }

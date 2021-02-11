@@ -36,8 +36,8 @@ func TestAll(t *testing.T) {
 	srv.NoRouteTesting(t)
 
 	v1 := srv.Router.PathPrefix("/v1").Subrouter()
-	v1.HandleFunc("/hello", handlers.HandlerHello).Methods("GET")
-	v1.HandleFunc("/time", handlers.HandlerGetTime).Methods("GET")
+	v1.HandleFunc("/hello", handlers.Hello).Methods("GET")
+	v1.HandleFunc("/time", handlers.GetTime).Methods("GET")
 
 	srv.HelloHandlerTesting(t)
 	srv.TimeHandlerTesting(t)
