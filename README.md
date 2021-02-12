@@ -6,13 +6,15 @@ Small starter project to play around with golang features, github actions and va
 
 ## Features
 
-| Features          | Description                                                 |
+| Features          | Description                                                 |  
 | :-----------------| :---------------------------------------------------------: |  
 | gorilla mux       | [routing using gorilla mux](https://github.com/gorilla/mux) |  
-| contexts          | [contexts](https://golang.org/pkg/context/)                 |
-| logrus            | [logging library](https://github.com/sirupsen/logrus)        |
+| contexts          | [contexts](https://golang.org/pkg/context/)                 |  
+| logrus            | [logging library](https://github.com/sirupsen/logrus)       |  
+| sqlx              | [sqlx driver](https://github.com/jmoiron/sqlx)              |  
+| pgx               | [pgx driver](https://github.com/jackc/pgx)                  |  
 | monitoring        | [elastic's application performance monitoring](https://www.elastic.co/guide/en/apm/agent/go/1.x/getting-started.html) |  
-| health check | [IETF RFC Health Ceck via nelkinda's health-go](https://tools.ietf.org/id/draft-inadarei-api-health-check-04.html)|
+| health check | [IETF RFC Health Ceck via nelkinda's health-go](https://tools.ietf.org/id/draft-inadarei-api-health-check-04.html) |  
 | swagger api       | [API documentations using swagger swagger.io](https://swagger.io/specification/) |  
 | | |  
 
@@ -28,6 +30,11 @@ GET /docs
 GET /v1/hello  
 GET /v1/time 
 GET /web/ 
+
+GET /v1/users  
+GET /v1/devices  
+POST /v1/user  
+POST /v1/device  
 
 ## build
 
@@ -77,7 +84,7 @@ or
 | api           | swagger api, any protocol and schema file are here |  
 | cmd           | main application lives here                        |  
 | docs          | design and user documentations collected here      |  
-| internal      | internal application and libraries are here         |  
+| internal      | internal application and libraries are here        |  
 | web           | web static files, htmls and css stored here        |  
   
 Further information see:  

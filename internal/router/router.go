@@ -29,9 +29,9 @@ func InitRoutes(r *mux.Router) {
 	v1 := r.PathPrefix("/v1").Subrouter()
 	v1.HandleFunc("/hello", handlers.Hello).Methods("GET")
 	v1.HandleFunc("/time", handlers.GetTime).Methods("GET")
+
 	v1.HandleFunc("/users", handlers.ListUsers).Methods("GET")
 	v1.HandleFunc("/devices", handlers.ListDevices).Methods("GET")
-
 	v1.HandleFunc("/user", handlers.AddUser).Methods("POST")
 	v1.HandleFunc("/device", handlers.AddDevice).Methods("POST")
 
@@ -44,6 +44,8 @@ func InitRoutes(r *mux.Router) {
 		r.HandleFunc(path, api.ServeStatic).Methods("GET")
 	}
 
+	// v1 APIs
+	v2 := r.PathPrefix("/v2").Subrouter()
 	// r.NotFoundHandler = http.HandlerFunc(handlers.HandlerNotFound)
 	// r.HandleFunc("/", handlers.HandlerNotFound)
 	// http.Handle("/", http.FileServer(http.Dir("./static/404.html")))
