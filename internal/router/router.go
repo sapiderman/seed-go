@@ -45,7 +45,9 @@ func InitRoutes(r *mux.Router) {
 	}
 
 	// v1 APIs
-	v2 := r.PathPrefix("/v2").Subrouter()
+	//v2 := r.PathPrefix("/v2").Subrouter()
+	//v2.HandleFunc("/devices", handlers.PgxListDevices).Methods("GET")
+
 	// r.NotFoundHandler = http.HandlerFunc(handlers.HandlerNotFound)
 	// r.HandleFunc("/", handlers.HandlerNotFound)
 	// http.Handle("/", http.FileServer(http.Dir("./static/404.html")))

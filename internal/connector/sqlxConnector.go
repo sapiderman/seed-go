@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-
 	"github.com/sapiderman/seed-go/internal/config"
 	log "github.com/sirupsen/logrus"
 )
@@ -51,7 +50,7 @@ const (
 		email VARCHAR(100) UNIQUE NOT NULL ,
 		password VARCHAR(255) NOT NULL,
 		pin INT,
-		device INT REFERENCES device(id)
+		devices INT REFERENCES device(id)
 		);`
 
 	// CreateTblDevicesSQL creates device table
@@ -88,7 +87,7 @@ func InitializeDBInstance() error {
 
 	psgqlConnectStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
 		config.Get("psql.host"), config.Get("psql.port"), config.Get("psql.user"), config.Get("psql.pass"), config.Get("psql.dbname"))
-	db, err := sqlx.Connect("pgx", psgqlConnectStr)
+	db, err := sqlx.Connect("postgress", psgqlConnectStr)
 	if err != nil {
 
 		log.Error("Connection to database error: ", err)
