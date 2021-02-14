@@ -1,8 +1,11 @@
 package handlers
 
 import (
+	"bytes"
 	"fmt"
 	"net/http"
+
+	"encoding/json"
 
 	"github.com/sapiderman/seed-go/internal/connector"
 )
@@ -25,15 +28,19 @@ func ListUsers(w http.ResponseWriter, r *http.Request) {
 // ListDevices lists all users
 func ListDevices(w http.ResponseWriter, r *http.Request) {
 
-	users, err := connector.ListAllDevices()
+	ctx := r.Context()
+	devlist, err := connector.ListAllDevices(ctx)
 	if err != nil {
 
 		w.WriteHeader(http.StatusNotImplemented)
 	}
 
-	fmt.Println(users)
+	reqBodyBytes := new(bytes.Buffer)
+	json.NewEncoder(reqBodyBytes).Encode(devlist)
+
 	w.WriteHeader(http.StatusOK)
 
+	w.Write(reqBodyBytes.Bytes())
 }
 
 // AddDevice adds a device to database

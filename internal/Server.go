@@ -20,9 +20,6 @@ var server Server
 
 // Server struct is your server definitions, put your configs here
 type Server struct {
-	Host string
-	Port int
-
 	StartUpTime   time.Time
 	ServerVersion string
 
@@ -60,11 +57,11 @@ func StartServer() {
 	}
 
 	log.Info("starting server...")
-	log.Info("listening at %s", address)
+	log.Info("listening at: ", address)
 	// Run our server in a goroutine so that it doesn't block.
 	go func() {
 		if err := server.HTTPServer.ListenAndServe(); err != nil {
-			log.Println(err)
+			log.Error(err)
 		}
 	}()
 

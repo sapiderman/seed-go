@@ -1,7 +1,11 @@
 package connector
 
 import (
+	"context"
 	"fmt"
+
+	//postgress import
+	_ "github.com/lib/pq"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/sapiderman/seed-go/internal/config"
@@ -68,7 +72,7 @@ const (
 	SelectAllUserSQL = `SELECT * from users;`
 
 	// SelectAllDeviceSQL queries device table
-	SelectAllDeviceSQL = `SELECT * from device;`
+	SelectAllDeviceSQL = `SELECT * from devices;`
 
 	// InsertUserSQL adds a user
 	InsertUserSQL = `INSERT INTO users (username phone email password pin device) VALUES ($1 $2 $3 $4 $5 $6);`
@@ -78,31 +82,34 @@ const (
 )
 
 var (
-	//DB instance
+	//db instance
 	db *sqlx.DB
+
+	sqlxLog = log.WithField("module", "sqlx")
 )
 
 // InitializeDBInstance create db instance
 func InitializeDBInstance() error {
 
-	psgqlConnectStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
+	slog := sqlxLog.WithField("func", "InitializeDBInstance")
+	psgqlConnectStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		config.Get("psql.host"), config.Get("psql.port"), config.Get("psql.user"), config.Get("psql.pass"), config.Get("psql.dbname"))
-	db, err := sqlx.Connect("postgress", psgqlConnectStr)
+	db, err := sqlx.Connect("postgres", psgqlConnectStr)
 	if err != nil {
 
-		log.Error("Connection to database error: ", err)
+		slog.Error("Connection to database error: ", err)
 		return err
 	}
-	defer db.Close()
+	// defer db.Close()
 
 	// ensure connection works: sqlx already pings db
-	// err = db.Ping()
-	// if err != nil {
-	// 	log.Error("Ping to database error: ", err)
-	// 	return err
-	// }
+	err = db.Ping()
+	if err != nil {
+		slog.Error("Ping to database error: ", err)
+		return err
+	}
 
-	log.Info("db connection and ping successful...")
+	slog.Info("db connection and ping successful...")
 
 	return nil
 }
@@ -110,9 +117,10 @@ func InitializeDBInstance() error {
 // DropAllTables initializes the
 func DropAllTables(db *sqlx.DB) error {
 
+	slog := sqlxLog.WithField("func", "DropAllTables")
 	_, err := db.Exec(DropAllTblSQL)
 	if err != nil {
-		log.Warn(err)
+		slog.Warn(err)
 		return err
 	}
 
@@ -140,25 +148,28 @@ func CreateAllTables(db *sqlx.DB) error {
 // ListAllUsers list all users
 func ListAllUsers() ([]User, error) {
 
+	slog := sqlxLog.WithField("func", "ListAllUsers")
 	users := []User{}
 
 	//_ , err := db.Exec(SelectAllUserSQL)
-	err := db.Select(&users, SelectAllUserSQL)
+	// err := db.Select(&users, SelectAllUserSQL)
+	err := db.Select(&users, `SELECT * from devices;`)
 	if err != nil {
-		log.Warn(err)
+		slog.Warn(err)
 		return nil, err
 	}
 
-	log.Info("got it:", users)
+	slog.Info("got it:", users)
 	return users, nil
 }
 
 // InsertUser inserts a single user to the database
 func InsertUser(users *User) error {
+	slog := sqlxLog.WithField("func", "InsertUser")
 
 	_, err := db.NamedExec(`INSERT INTO user () VALUES ()`, users)
 	if err != nil {
-		log.Warn(err)
+		slog.Warn(err)
 		return err
 	}
 
@@ -166,14 +177,15 @@ func InsertUser(users *User) error {
 }
 
 // ListAllDevices list all devices
-func ListAllDevices() ([]Device, error) {
+func ListAllDevices(ctx context.Context) ([]Device, error) {
+	slog := sqlxLog.WithField("func", "ListAllDevices")
 
 	devices := []Device{}
 
 	//_ , err := db.Exec(SelectAllUserSQL)
 	err := db.Select(&devices, SelectAllDeviceSQL)
 	if err != nil {
-		log.Warn(err)
+		slog.Warn(err)
 		return nil, err
 	}
 

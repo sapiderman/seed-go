@@ -9,7 +9,6 @@ import (
 	"github.com/sapiderman/seed-go/api"
 	"github.com/sapiderman/seed-go/internal/handlers"
 	"github.com/sapiderman/seed-go/internal/logger"
-	"go.elastic.co/apm/module/apmgorilla"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -18,8 +17,8 @@ import (
 func InitRoutes(r *mux.Router) {
 
 	// register middlewares
-	r.Use(apmgorilla.Middleware()) // apmgorilla.Instrument(r.MuxRouter) // elastic apm
-	r.Use(logger.MyLogger)         // ye-olde logger
+	// r.Use(apmgorilla.Middleware()) // apmgorilla.Instrument(r.MuxRouter) // elastic apm
+	r.Use(logger.MyLogger) // ye-olde logger
 
 	// health check endpoint. Not in a version path as it will seems to be a permanent endpoint (famous last words)
 	h := handlers.NewHealth()
