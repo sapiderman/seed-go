@@ -28,8 +28,7 @@ func ListUsers(w http.ResponseWriter, r *http.Request) {
 // ListDevices lists all users
 func ListDevices(w http.ResponseWriter, r *http.Request) {
 
-	ctx := r.Context()
-	devlist, err := connector.ListAllDevices(ctx)
+	devlist, err := connector.ListAllDevices()
 	if err != nil {
 
 		w.WriteHeader(http.StatusNotImplemented)
@@ -50,8 +49,23 @@ func AddDevice(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// NewUser to check input
+type NewUser struct {
+	Name     string
+	Email    string
+	Mobileno string
+	Password string
+}
+
 // AddUser adds a user to database
 func AddUser(w http.ResponseWriter, r *http.Request) {
+
+	newuser := NewUser{}
+	err := json.NewDecoder(r.Body).Decode(&newuser)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	w.WriteHeader(http.StatusOK)
 

@@ -1,7 +1,6 @@
 package connector
 
 import (
-	"context"
 	"fmt"
 
 	//postgress import
@@ -28,15 +27,14 @@ type User struct {
 
 // Device model for storing device table rows
 type Device struct {
-	id          string
-	createdAt   string
-	updatedAt   string
-	deletedAt   string
-	phoneBrand  string
-	phoneModel  string
-	year        string
-	pushNotifID string
-	deviceID    string
+	ID         string `db:"id"`
+	CreatedAt  string `db:"created_at"`
+	UpdatedAt  string `db:"updated_at"`
+	DeletedAt  string `db:"deleted_at"`
+	PhoneBrand string `db:"phone_brand"`
+	PhoneModel string `db:"phone_model"`
+	PushID     string `db:"push_id"`
+	DeviceID   string `db:"device_id"`
 }
 
 const (
@@ -54,7 +52,7 @@ const (
 		email VARCHAR(100) UNIQUE NOT NULL ,
 		password VARCHAR(255) NOT NULL,
 		pin INT,
-		devices INT REFERENCES device(id)
+		devices INT REFERENCES devices(id)
 		);`
 
 	// CreateTblDevicesSQL creates device table
@@ -75,10 +73,13 @@ const (
 	SelectAllDeviceSQL = `SELECT * from devices;`
 
 	// InsertUserSQL adds a user
-	InsertUserSQL = `INSERT INTO users (username phone email password pin device) VALUES ($1 $2 $3 $4 $5 $6);`
+	InsertUserSQL = `INSERT INTO users 
+	(username, phone, email, password, pin, device) 
+	VALUES ($1, $2, $3, $4, $5, $6);`
 
-	// InsertDeviceSQL adds a device
-	InsertDeviceSQL = `INSERT INTO devices (phone_brannd phone_model push_id device_id) VALUES ($1 $2 $3 $4);`
+	// InsertDeviceSQL adds a devics)
+	InsertDeviceSQL = `INSERT INTO devices (id, created_at, updated_at, deleted_at, phone_brand, phone_model, push_id, device_id)
+	  VALUES (:id, :created_at, :updated_at, :deleted_at, :phone_brand, :phone_model, :push_id, :device_id);`
 )
 
 var (
@@ -91,13 +92,12 @@ var (
 // InitializeDBInstance create db instance
 func InitializeDBInstance() error {
 
-	slog := sqlxLog.WithField("func", "InitializeDBInstance")
+	logf := sqlxLog.WithField("func", "InitializeDBInstance")
 	psgqlConnectStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		config.Get("psql.host"), config.Get("psql.port"), config.Get("psql.user"), config.Get("psql.pass"), config.Get("psql.dbname"))
 	db, err := sqlx.Connect("postgres", psgqlConnectStr)
 	if err != nil {
-
-		slog.Error("Connection to database error: ", err)
+		logf.Error("Connection to database error: ", err)
 		return err
 	}
 	// defer db.Close()
@@ -105,11 +105,11 @@ func InitializeDBInstance() error {
 	// ensure connection works: sqlx already pings db
 	err = db.Ping()
 	if err != nil {
-		slog.Error("Ping to database error: ", err)
+		logf.Error("Ping to database error: ", err)
 		return err
 	}
 
-	slog.Info("db connection and ping successful...")
+	logf.Info("db connection and ping successful...")
 
 	return nil
 }
@@ -117,10 +117,10 @@ func InitializeDBInstance() error {
 // DropAllTables initializes the
 func DropAllTables(db *sqlx.DB) error {
 
-	slog := sqlxLog.WithField("func", "DropAllTables")
+	logf := sqlxLog.WithField("func", "DropAllTables")
 	_, err := db.Exec(DropAllTblSQL)
 	if err != nil {
-		slog.Warn(err)
+		logf.Warn(err)
 		return err
 	}
 
@@ -130,13 +130,13 @@ func DropAllTables(db *sqlx.DB) error {
 // CreateAllTables initializes the
 func CreateAllTables(db *sqlx.DB) error {
 
-	_, err := db.Exec(CreateTblUsersSQL)
+	_, err := db.Exec(CreateTblDevicesSQL)
 	if err != nil {
 		log.Warn(err)
 		return err
 	}
 
-	_, err = db.Exec(CreateTblDevicesSQL)
+	_, err = db.Exec(CreateTblUsersSQL)
 	if err != nil {
 		log.Warn(err)
 		return err
@@ -148,28 +148,28 @@ func CreateAllTables(db *sqlx.DB) error {
 // ListAllUsers list all users
 func ListAllUsers() ([]User, error) {
 
-	slog := sqlxLog.WithField("func", "ListAllUsers")
+	logf := sqlxLog.WithField("func", "ListAllUsers")
 	users := []User{}
 
 	//_ , err := db.Exec(SelectAllUserSQL)
 	// err := db.Select(&users, SelectAllUserSQL)
 	err := db.Select(&users, `SELECT * from devices;`)
 	if err != nil {
-		slog.Warn(err)
+		logf.Warn(err)
 		return nil, err
 	}
 
-	slog.Info("got it:", users)
+	logf.Info("got it:", users)
 	return users, nil
 }
 
 // InsertUser inserts a single user to the database
 func InsertUser(users *User) error {
-	slog := sqlxLog.WithField("func", "InsertUser")
+	logf := sqlxLog.WithField("func", "InsertUser")
 
 	_, err := db.NamedExec(`INSERT INTO user () VALUES ()`, users)
 	if err != nil {
-		slog.Warn(err)
+		logf.Warn(err)
 		return err
 	}
 
@@ -177,15 +177,15 @@ func InsertUser(users *User) error {
 }
 
 // ListAllDevices list all devices
-func ListAllDevices(ctx context.Context) ([]Device, error) {
-	slog := sqlxLog.WithField("func", "ListAllDevices")
+func ListAllDevices() ([]Device, error) {
+	logf := sqlxLog.WithField("func", "ListAllDevices")
 
 	devices := []Device{}
 
 	//_ , err := db.Exec(SelectAllUserSQL)
-	err := db.Select(&devices, SelectAllDeviceSQL)
+	err := db.Select(&devices, "SELECT * from devices;")
 	if err != nil {
-		slog.Warn(err)
+		logf.Warn(err)
 		return nil, err
 	}
 
@@ -193,14 +193,15 @@ func ListAllDevices(ctx context.Context) ([]Device, error) {
 }
 
 // InsertDevice a record into device table
-func InsertDevice(dev Device) error {
+func InsertDevice(d *Device) error {
+	logf := sqlxLog.WithField("func", "ListAllInsertDeviceDevices")
 
-	//_ , err := db.Exec(SelectAllUserSQL)
-	// err := db.Select(&devices, SelectAllDeviceSQL)
-	// if err != nil {
-	// 	log.Warn(err)
-	// 	return  err
-	// }
+	res, err := db.NamedExec(InsertDeviceSQL, d)
+	if err != nil {
+		logf.Warn(err)
+		return err
+	}
 
+	logf.Info("success: ", res)
 	return nil
 }
