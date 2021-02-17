@@ -8,6 +8,6 @@ require (
 	github.com/jmoiron/sqlx v1.3.1
 	github.com/lib/pq v1.9.0
 	github.com/nelkinda/health-go v0.0.1
-	github.com/sirupsen/logrus v1.7.1
+	github.com/sirupsen/logrus v1.8.0
 	github.com/spf13/viper v1.7.1
 )
