@@ -22,6 +22,8 @@ func LoadConfig() {
 	viper.AutomaticEnv()
 	defCfg = make(map[string]string)
 
+	defCfg["app.version"] = "0.0.1"
+
 	defCfg["server.host"] = "localhost"
 	defCfg["server.port"] = "7000"
 	defCfg["server.log.level"] = "debug" // valid values are trace, debug, info, warn, error, fatal

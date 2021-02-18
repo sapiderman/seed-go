@@ -13,16 +13,16 @@ import (
 
 // User model for storing user table rows
 type User struct {
-	id        string
-	createdAt string
-	updatedat string
-	deletedAt string
-	username  string
-	phone     string
-	email     string
-	password  string
-	pin       int
-	device    string
+	ID        string `db:"id"`
+	CreatedAt string `db:"created_at"`
+	UpdatedAt string `db:"update_at"`
+	DeletedAt string `db:"deleted_at"`
+	Username  string `db:"username"`
+	Phone     string `db:"phone"`
+	Email     string `db:"email"`
+	Password  string `db:"password"`
+	Pin       int    `db:"pin"`
+	Device    string `db:"device"`
 }
 
 // Device model for storing device table rows
@@ -82,15 +82,17 @@ const (
 	  VALUES (:id, :created_at, :updated_at, :deleted_at, :phone_brand, :phone_model, :push_id, :device_id);`
 )
 
-var (
-	//db instance
-	db *sqlx.DB
+//DbPool struct wraps the db instance
+type DbPool struct {
+	Db *sqlx.DB
+}
 
+var (
 	sqlxLog = log.WithField("module", "sqlx")
 )
 
-// InitializeDBInstance create db instance
-func InitializeDBInstance() error {
+// NewDbInstance create db instance
+func NewDbInstance() (*DbPool, error) {
 
 	logf := sqlxLog.WithField("func", "InitializeDBInstance")
 	psgqlConnectStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
@@ -98,27 +100,28 @@ func InitializeDBInstance() error {
 	db, err := sqlx.Connect("postgres", psgqlConnectStr)
 	if err != nil {
 		logf.Error("Connection to database error: ", err)
-		return err
+		return nil, err
 	}
-	// defer db.Close()
+	defer db.Close()
 
 	// ensure connection works: sqlx already pings db
 	err = db.Ping()
 	if err != nil {
 		logf.Error("Ping to database error: ", err)
-		return err
+		return nil, err
 	}
 
 	logf.Info("db connection and ping successful...")
 
-	return nil
+	p := DbPool{Db: db}
+	return &p, nil
 }
 
 // DropAllTables initializes the
-func DropAllTables(db *sqlx.DB) error {
+func (p *DbPool) DropAllTables() error {
 
 	logf := sqlxLog.WithField("func", "DropAllTables")
-	_, err := db.Exec(DropAllTblSQL)
+	_, err := p.Db.Exec(DropAllTblSQL)
 	if err != nil {
 		logf.Warn(err)
 		return err
@@ -128,15 +131,15 @@ func DropAllTables(db *sqlx.DB) error {
 }
 
 // CreateAllTables initializes the
-func CreateAllTables(db *sqlx.DB) error {
+func (p *DbPool) CreateAllTables() error {
 
-	_, err := db.Exec(CreateTblDevicesSQL)
+	_, err := p.Db.Exec(CreateTblDevicesSQL)
 	if err != nil {
 		log.Warn(err)
 		return err
 	}
 
-	_, err = db.Exec(CreateTblUsersSQL)
+	_, err = p.Db.Exec(CreateTblUsersSQL)
 	if err != nil {
 		log.Warn(err)
 		return err
@@ -146,14 +149,14 @@ func CreateAllTables(db *sqlx.DB) error {
 }
 
 // ListAllUsers list all users
-func ListAllUsers() ([]User, error) {
+func (p *DbPool) ListAllUsers() ([]User, error) {
 
 	logf := sqlxLog.WithField("func", "ListAllUsers")
 	users := []User{}
 
 	//_ , err := db.Exec(SelectAllUserSQL)
 	// err := db.Select(&users, SelectAllUserSQL)
-	err := db.Select(&users, `SELECT * from devices;`)
+	err := p.Db.Select(&users, `SELECT * from devices;`)
 	if err != nil {
 		logf.Warn(err)
 		return nil, err
@@ -164,10 +167,10 @@ func ListAllUsers() ([]User, error) {
 }
 
 // InsertUser inserts a single user to the database
-func InsertUser(users *User) error {
+func (p *DbPool) InsertUser(users *User) error {
 	logf := sqlxLog.WithField("func", "InsertUser")
 
-	_, err := db.NamedExec(`INSERT INTO user () VALUES ()`, users)
+	_, err := p.Db.NamedExec(`INSERT INTO user () VALUES ()`, users)
 	if err != nil {
 		logf.Warn(err)
 		return err
@@ -177,13 +180,13 @@ func InsertUser(users *User) error {
 }
 
 // ListAllDevices list all devices
-func ListAllDevices() ([]Device, error) {
+func (p *DbPool) ListAllDevices() ([]Device, error) {
 	logf := sqlxLog.WithField("func", "ListAllDevices")
 
 	devices := []Device{}
 
 	//_ , err := db.Exec(SelectAllUserSQL)
-	err := db.Select(&devices, "SELECT * from devices;")
+	err := p.Db.Select(&devices, "SELECT * from devices;")
 	if err != nil {
 		logf.Warn(err)
 		return nil, err
@@ -193,10 +196,10 @@ func ListAllDevices() ([]Device, error) {
 }
 
 // InsertDevice a record into device table
-func InsertDevice(d *Device) error {
+func (p *DbPool) InsertDevice(d *Device) error {
 	logf := sqlxLog.WithField("func", "ListAllInsertDeviceDevices")
 
-	res, err := db.NamedExec(InsertDeviceSQL, d)
+	res, err := p.Db.NamedExec(InsertDeviceSQL, d)
 	if err != nil {
 		logf.Warn(err)
 		return err

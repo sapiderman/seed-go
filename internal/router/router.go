@@ -13,8 +13,17 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// Router is a wrapper for all the router connections
+type Router struct {
+	Router  *mux.Router
+	Handler *handlers.MyHandlers
+}
+
 // InitRoutes creates our routes
-func InitRoutes(r *mux.Router) {
+func InitRoutes(router *Router) {
+
+	r := router.Router
+	rh := router.Handler
 
 	// register middlewares
 	// r.Use(apmgorilla.Middleware()) // apmgorilla.Instrument(r.MuxRouter) // elastic apm
@@ -29,10 +38,10 @@ func InitRoutes(r *mux.Router) {
 	v1.HandleFunc("/hello", handlers.Hello).Methods("GET")
 	v1.HandleFunc("/time", handlers.GetTime).Methods("GET")
 
-	v1.HandleFunc("/users", handlers.ListUsers).Methods("GET")
-	v1.HandleFunc("/devices", handlers.ListDevices).Methods("GET")
-	v1.HandleFunc("/user", handlers.AddUser).Methods("POST")
-	v1.HandleFunc("/device", handlers.AddDevice).Methods("POST")
+	v1.HandleFunc("/users", rh.ListUsers).Methods("GET")
+	v1.HandleFunc("/devices", rh.ListDevices).Methods("GET")
+	v1.HandleFunc("/user", rh.AddUser).Methods("POST")
+	v1.HandleFunc("/device", rh.AddDevice).Methods("POST")
 
 	// static file handler
 	r.PathPrefix("/web/").Handler(http.StripPrefix("/web/", http.FileServer(http.Dir("./web"))))

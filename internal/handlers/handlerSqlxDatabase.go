@@ -10,10 +10,23 @@ import (
 	"github.com/sapiderman/seed-go/internal/connector"
 )
 
-// ListUsers lists all users
-func ListUsers(w http.ResponseWriter, r *http.Request) {
+// MyHandlers wraps all needed connectors
+type MyHandlers struct {
+	repo *connector.DbPool
+}
 
-	users, err := connector.ListAllUsers()
+// NewHandlers instantiates myHandler
+func NewHandlers(p *connector.DbPool) (*MyHandlers, error) {
+
+	nh := MyHandlers{repo: p}
+
+	return &nh, nil
+}
+
+// ListUsers lists all users
+func (h *MyHandlers) ListUsers(w http.ResponseWriter, r *http.Request) {
+
+	users, err := h.repo.ListAllUsers()
 	if err != nil {
 
 		w.WriteHeader(http.StatusNotImplemented)
@@ -26,9 +39,9 @@ func ListUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 // ListDevices lists all users
-func ListDevices(w http.ResponseWriter, r *http.Request) {
+func (h *MyHandlers) ListDevices(w http.ResponseWriter, r *http.Request) {
 
-	devlist, err := connector.ListAllDevices()
+	devlist, err := h.repo.ListAllDevices()
 	if err != nil {
 
 		w.WriteHeader(http.StatusNotImplemented)
@@ -43,7 +56,7 @@ func ListDevices(w http.ResponseWriter, r *http.Request) {
 }
 
 // AddDevice adds a device to database
-func AddDevice(w http.ResponseWriter, r *http.Request) {
+func (h *MyHandlers) AddDevice(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 
@@ -58,7 +71,7 @@ type NewUser struct {
 }
 
 // AddUser adds a user to database
-func AddUser(w http.ResponseWriter, r *http.Request) {
+func (h *MyHandlers) AddUser(w http.ResponseWriter, r *http.Request) {
 
 	newuser := NewUser{}
 	err := json.NewDecoder(r.Body).Decode(&newuser)
