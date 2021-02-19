@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"context"
 	"io/ioutil"
 	"net/http"
 
+	"github.com/sapiderman/seed-go/internal/helpers"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -24,6 +26,7 @@ func GetTime(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	w.Write([]byte(body))
+	ctx := context.Background()
+	helpers.HTTPResponseBuilder(ctx, w, r, http.StatusOK, "", body)
 
 }

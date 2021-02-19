@@ -8,34 +8,9 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/sapiderman/seed-go/internal/config"
+	"github.com/sapiderman/seed-go/internal/models"
 	log "github.com/sirupsen/logrus"
 )
-
-// User model for storing user table rows
-type User struct {
-	ID        string `db:"id"`
-	CreatedAt string `db:"created_at"`
-	UpdatedAt string `db:"update_at"`
-	DeletedAt string `db:"deleted_at"`
-	Username  string `db:"username"`
-	Phone     string `db:"phone"`
-	Email     string `db:"email"`
-	Password  string `db:"password"`
-	Pin       int    `db:"pin"`
-	Device    string `db:"device"`
-}
-
-// Device model for storing device table rows
-type Device struct {
-	ID         string `db:"id"`
-	CreatedAt  string `db:"created_at"`
-	UpdatedAt  string `db:"updated_at"`
-	DeletedAt  string `db:"deleted_at"`
-	PhoneBrand string `db:"phone_brand"`
-	PhoneModel string `db:"phone_model"`
-	PushID     string `db:"push_id"`
-	DeviceID   string `db:"device_id"`
-}
 
 const (
 	// DropAllTblSQL drops all table
@@ -149,10 +124,10 @@ func (p *DbPool) CreateAllTables() error {
 }
 
 // ListAllUsers list all users
-func (p *DbPool) ListAllUsers() ([]User, error) {
+func (p *DbPool) ListAllUsers() ([]models.User, error) {
 
 	logf := sqlxLog.WithField("func", "ListAllUsers")
-	users := []User{}
+	users := []models.User{}
 
 	//_ , err := db.Exec(SelectAllUserSQL)
 	// err := db.Select(&users, SelectAllUserSQL)
@@ -167,10 +142,11 @@ func (p *DbPool) ListAllUsers() ([]User, error) {
 }
 
 // InsertUser inserts a single user to the database
-func (p *DbPool) InsertUser(users *User) error {
+func (p *DbPool) InsertUser(users *models.NewUser) error {
 	logf := sqlxLog.WithField("func", "InsertUser")
 
-	_, err := p.Db.NamedExec(`INSERT INTO user () VALUES ()`, users)
+	// _, err := p.Db.NamedExec(`INSERT INTO user () VALUES ()`, users)
+	err := p.Db.Ping()
 	if err != nil {
 		logf.Warn(err)
 		return err
@@ -180,10 +156,10 @@ func (p *DbPool) InsertUser(users *User) error {
 }
 
 // ListAllDevices list all devices
-func (p *DbPool) ListAllDevices() ([]Device, error) {
+func (p *DbPool) ListAllDevices() ([]models.Device, error) {
 	logf := sqlxLog.WithField("func", "ListAllDevices")
 
-	devices := []Device{}
+	devices := []models.Device{}
 
 	//_ , err := db.Exec(SelectAllUserSQL)
 	err := p.Db.Select(&devices, "SELECT * from devices;")
@@ -196,7 +172,7 @@ func (p *DbPool) ListAllDevices() ([]Device, error) {
 }
 
 // InsertDevice a record into device table
-func (p *DbPool) InsertDevice(d *Device) error {
+func (p *DbPool) InsertDevice(d *models.Device) error {
 	logf := sqlxLog.WithField("func", "ListAllInsertDeviceDevices")
 
 	res, err := p.Db.NamedExec(InsertDeviceSQL, d)

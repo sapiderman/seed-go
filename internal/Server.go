@@ -20,7 +20,7 @@ import (
 
 var (
 	server Server
-	srvLog = log.WithField("module", "sqlx")
+	srvLog = log.WithField("module", "server")
 )
 
 // Server struct is your server definitions, put your configs here
@@ -39,11 +39,12 @@ type Server struct {
 
 // InitializeServer initializes all server connections
 func InitializeServer() error {
-	logf := srvLog.WithField("func", "newServer")
+	logf := srvLog.WithField("func", "InitializeServer")
 
 	server.StartUpTime = time.Now()
 	server.ServerVersion = config.Get("app.version")
 
+	server.Router = router.NewRouter()
 	server.Router.Router = mux.NewRouter()
 
 	logf.Info("connecting database...")
@@ -53,11 +54,11 @@ func InitializeServer() error {
 	}
 
 	server.Repo = db
-	server.Handler, err = handlers.NewHandlers(db)
-	if err != nil {
-		return err
-	}
+	server.Handler = handlers.NewHandlers(db)
 	server.Router.Handler = server.Handler
+
+	logf.Info("initializing routes...")
+	router.InitRoutes(server.Router)
 
 	return nil
 }
@@ -73,9 +74,6 @@ func StartServer() {
 	if err != nil {
 		logf.Error(err)
 	}
-
-	logf.Info("initializing routes...")
-	router.InitRoutes(server.Router)
 
 	address := fmt.Sprintf("%s:%s", config.Get("server.host"), config.Get("server.port"))
 	server.HTTPServer = &http.Server{

@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 
 	"github.com/sapiderman/seed-go/internal/connector"
+	"github.com/sapiderman/seed-go/internal/models"
 )
 
 // MyHandlers wraps all needed connectors
@@ -16,11 +17,8 @@ type MyHandlers struct {
 }
 
 // NewHandlers instantiates myHandler
-func NewHandlers(p *connector.DbPool) (*MyHandlers, error) {
-
-	nh := MyHandlers{repo: p}
-
-	return &nh, nil
+func NewHandlers(p *connector.DbPool) *MyHandlers {
+	return &MyHandlers{}
 }
 
 // ListUsers lists all users
@@ -49,9 +47,7 @@ func (h *MyHandlers) ListDevices(w http.ResponseWriter, r *http.Request) {
 
 	reqBodyBytes := new(bytes.Buffer)
 	json.NewEncoder(reqBodyBytes).Encode(devlist)
-
 	w.WriteHeader(http.StatusOK)
-
 	w.Write(reqBodyBytes.Bytes())
 }
 
@@ -62,24 +58,23 @@ func (h *MyHandlers) AddDevice(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// NewUser to check input
-type NewUser struct {
-	Name     string
-	Email    string
-	Mobileno string
-	Password string
-}
-
 // AddUser adds a user to database
 func (h *MyHandlers) AddUser(w http.ResponseWriter, r *http.Request) {
 
-	newuser := NewUser{}
+	newuser := models.NewUser{}
 	err := json.NewDecoder(r.Body).Decode(&newuser)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
+	err = h.repo.InsertUser(&newuser)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
 }

@@ -7,6 +7,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/sapiderman/seed-go/internal/config"
 	"github.com/sapiderman/seed-go/internal/connector"
+	"github.com/sapiderman/seed-go/internal/models"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -65,7 +66,7 @@ func Test_InsertDevice(t *testing.T) {
 	//  VALUES (:id, :created_at, :updated_at, :deleted_at, :phone_brand, :phone_model, :push_id, :device_id)`
 	// _, err = dbtest.Exec(sqlStatement)
 
-	testDev := connector.Device{
+	testDev := models.Device{
 		ID:         "1",
 		CreatedAt:  "2004-10-19 10:23:54+02",
 		UpdatedAt:  "2004-10-19 10:23:54+02",
@@ -95,7 +96,7 @@ func Test_ListAllDevices(t *testing.T) {
 	p := connector.DbPool{Db: dbtest}
 
 	// ctx := context.Background()
-	dev := []connector.Device{}
+	dev := []models.Device{}
 	dev, err = p.ListAllDevices()
 	if err != nil {
 		t.Fatal(err)

@@ -19,6 +19,11 @@ type Router struct {
 	Handler *handlers.MyHandlers
 }
 
+// NewRouter get new Instance
+func NewRouter() *Router {
+	return &Router{}
+}
+
 // InitRoutes creates our routes
 func InitRoutes(router *Router) {
 
