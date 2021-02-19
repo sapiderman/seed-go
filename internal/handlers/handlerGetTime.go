@@ -27,6 +27,6 @@ func GetTime(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx := context.Background()
-	helpers.HTTPResponseBuilder(ctx, w, r, http.StatusOK, "", body)
+	helpers.HTTPResponseBuilder(ctx, w, r, http.StatusOK, "", string(body))
 
 }

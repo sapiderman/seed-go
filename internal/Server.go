@@ -19,33 +19,37 @@ import (
 )
 
 var (
-	server Server
 	srvLog = log.WithField("module", "server")
-)
 
-// Server struct is your server definitions, put your configs here
-type Server struct {
-	StartUpTime   time.Time
+	// StartUpTime records first ime up
+	StartUpTime time.Time
+	// ServerVersion is a semver versioning
 	ServerVersion string
-	HTTPServer    *http.Server
-	Router        *router.Router
-	Repo          *connector.DbPool
-	Handler       *handlers.MyHandlers
+	// HTTPServer object
+	HTTPServer *http.Server
+	// Router boject
+	Router *router.Router
+	// Repo is the database object
+	Repo *connector.DbPool
+	// Handler is all the handlera
+	Handler *handlers.MyHandlers
+
+	address string
 
 	// add aditional components here
 	// Monitor	*Monitor
 	// MessageQ *MessageQ
-}
+)
 
 // InitializeServer initializes all server connections
 func InitializeServer() error {
 	logf := srvLog.WithField("func", "InitializeServer")
 
-	server.StartUpTime = time.Now()
-	server.ServerVersion = config.Get("app.version")
+	StartUpTime = time.Now()
+	ServerVersion = config.Get("app.version")
 
-	server.Router = router.NewRouter()
-	server.Router.Router = mux.NewRouter()
+	Router = router.NewRouter()
+	Router.Router = mux.NewRouter()
 
 	logf.Info("connecting database...")
 	db, err := connector.NewDbInstance()
@@ -53,12 +57,21 @@ func InitializeServer() error {
 		return err
 	}
 
-	server.Repo = db
-	server.Handler = handlers.NewHandlers(db)
-	server.Router.Handler = server.Handler
+	Repo = db
+	Handler = handlers.NewHandlers(db)
+	Router.Handler = Handler
 
 	logf.Info("initializing routes...")
-	router.InitRoutes(server.Router)
+	router.InitRoutes(Router)
+
+	address := fmt.Sprintf("%s:%s", config.Get("server.host"), config.Get("server.port"))
+	HTTPServer = &http.Server{
+		Addr:         address,
+		WriteTimeout: time.Second * 15, // Good practice to set timeouts to avoid Slowloris attacks.
+		ReadTimeout:  time.Second * 15,
+		IdleTimeout:  time.Second * 60,
+		Handler:      Router.Router, // Pass our instance of gorilla/mux in.
+	}
 
 	return nil
 }
@@ -75,20 +88,11 @@ func StartServer() {
 		logf.Error(err)
 	}
 
-	address := fmt.Sprintf("%s:%s", config.Get("server.host"), config.Get("server.port"))
-	server.HTTPServer = &http.Server{
-		Addr:         address,
-		WriteTimeout: time.Second * 15, // Good practice to set timeouts to avoid Slowloris attacks.
-		ReadTimeout:  time.Second * 15,
-		IdleTimeout:  time.Second * 60,
-		Handler:      server.Router.Router, // Pass our instance of gorilla/mux in.
-	}
-
 	logf.Info("starting server...")
 	logf.Info("listening at: ", address)
 	// Run our server in a goroutine so that it doesn't block.
 	go func() {
-		if err := server.HTTPServer.ListenAndServe(); err != nil {
+		if err := HTTPServer.ListenAndServe(); err != nil {
 			logf.Error(err)
 		}
 	}()
@@ -108,7 +112,7 @@ func StartServer() {
 	defer cancel()
 	// Doesn't block if no connections, but will otherwise wait
 	// until the timeout deadline.
-	server.HTTPServer.Shutdown(ctx)
+	HTTPServer.Shutdown(ctx)
 	// Optionally, you could run srv.Shutdown in a goroutine and block on
 	// <-ctx.Done() if your application should wait for other services
 	// to finalize based on context cancellation.
