@@ -2,25 +2,20 @@ package helpers
 
 import (
 	"context"
-	"encoding/json"
-	"net/http"
 
-	"github.com/go-playground/validator/v10"
+	"github.com/asaskevich/govalidator"
+	log "github.com/sirupsen/logrus"
 )
 
-var validate *validator.Validate
+var helpLog = log.WithField("module", "helper")
 
-//ValidateInput validates inputs against a struct tag
-func ValidateInput(ctx context.Context, r *http.Request, mystruct interface{}) error {
+// ValidateInput validates a strct against its tags
+func ValidateInput(ctx context.Context, mystruct interface{}) error {
 
-	mystruct = validator.New()
-	err := json.NewDecoder(r.Body).Decode(&mystruct)
-	if err != nil {
-		return err
-	}
+	logf := helpLog.WithField("func", "ValidateInput")
 
-	err = validate.Struct(mystruct)
-	if err != nil {
+	if _, err := govalidator.ValidateStruct(mystruct); err != nil {
+		logf.Warn("validation error. ", err)
 		return err
 	}
 

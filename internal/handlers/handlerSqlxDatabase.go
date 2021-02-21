@@ -7,22 +7,12 @@ import (
 
 	"encoding/json"
 
-	"github.com/sapiderman/seed-go/internal/connector"
+	"github.com/sapiderman/seed-go/internal/helpers"
 	"github.com/sapiderman/seed-go/internal/models"
 )
 
-// MyHandlers wraps all needed connectors
-type MyHandlers struct {
-	repo *connector.DbPool
-}
-
-// NewHandlers instantiates myHandler
-func NewHandlers(p *connector.DbPool) *MyHandlers {
-	return &MyHandlers{}
-}
-
 // ListUsers lists all users
-func (h *MyHandlers) ListUsers(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) ListUsers(w http.ResponseWriter, r *http.Request) {
 
 	users, err := h.repo.ListAllUsers()
 	if err != nil {
@@ -37,7 +27,7 @@ func (h *MyHandlers) ListUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 // ListDevices lists all users
-func (h *MyHandlers) ListDevices(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) ListDevices(w http.ResponseWriter, r *http.Request) {
 
 	devlist, err := h.repo.ListAllDevices()
 	if err != nil {
@@ -52,29 +42,55 @@ func (h *MyHandlers) ListDevices(w http.ResponseWriter, r *http.Request) {
 }
 
 // AddDevice adds a device to database
-func (h *MyHandlers) AddDevice(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) AddDevice(w http.ResponseWriter, r *http.Request) {
+	logf := hLog.WithField("func", "AddDevice()")
 
-	w.WriteHeader(http.StatusOK)
+	newDevice := models.Device{}
+	err := json.NewDecoder(r.Body).Decode(&newDevice)
+	if err != nil {
+		logf.Error(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
+	err = helpers.ValidateInput(r.Context(), newDevice)
+	if err != nil {
+		logf.Error(err)
+		return
+	}
+
+	err = h.repo.InsertDevice(&newDevice)
+	if err != nil {
+		logf.Error(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 }
 
 // AddUser adds a user to database
-func (h *MyHandlers) AddUser(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) AddUser(w http.ResponseWriter, r *http.Request) {
+	logf := hLog.WithField("func", "AddUser()")
 
 	newuser := models.NewUser{}
 	err := json.NewDecoder(r.Body).Decode(&newuser)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		logf.Error(err)
+		helpers.HTTPResponseBuilder(r.Context(), w, r, http.StatusBadRequest, "Bad payload", nil)
+		return
+	}
+
+	err = helpers.ValidateInput(r.Context(), newuser)
+	if err != nil {
+		logf.Error(err)
+		helpers.HTTPResponseBuilder(r.Context(), w, r, http.StatusBadRequest, "Missing or wrong parameters", nil)
 		return
 	}
 
 	err = h.repo.InsertUser(&newuser)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		logf.Error(err)
+		helpers.HTTPResponseBuilder(r.Context(), w, r, http.StatusInternalServerError, "", nil)
 		return
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
 
 }

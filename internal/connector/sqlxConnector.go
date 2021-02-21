@@ -66,22 +66,23 @@ var (
 	sqlxLog = log.WithField("module", "sqlx")
 )
 
-// NewDbInstance create db instance
-func NewDbInstance() (*DbPool, error) {
-
+// NewInstance create DbPool instance
+func NewInstance() (*DbPool, error) {
 	logf := sqlxLog.WithField("func", "InitializeDBInstance")
+
 	psgqlConnectStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		config.Get("psql.host"), config.Get("psql.port"), config.Get("psql.user"), config.Get("psql.pass"), config.Get("psql.dbname"))
-	db, err := sqlx.Connect("postgres", psgqlConnectStr)
+	db, err := sqlx.Open("postgres", psgqlConnectStr)
 	if err != nil {
 		logf.Error("Connection to database error: ", err)
 		return nil, err
 	}
-	defer db.Close()
+	// defer db.Close()
 
 	// ensure connection works: sqlx already pings db
 	err = db.Ping()
 	if err != nil {
+		db.Close()
 		logf.Error("Ping to database error: ", err)
 		return nil, err
 	}
@@ -90,6 +91,13 @@ func NewDbInstance() (*DbPool, error) {
 
 	p := DbPool{Db: db}
 	return &p, nil
+}
+
+// CloseConnection closes connetion
+func (p *DbPool) CloseConnection() error {
+	p.Db.Close()
+	sqlxLog.WithField("func", "CloseConnection").Info("Closing database connection")
+	return nil
 }
 
 // DropAllTables initializes the
@@ -148,7 +156,8 @@ func (p *DbPool) InsertUser(users *models.NewUser) error {
 	// _, err := p.Db.NamedExec(`INSERT INTO user () VALUES ()`, users)
 	err := p.Db.Ping()
 	if err != nil {
-		logf.Warn(err)
+		p.Db.Close()
+		logf.Warn("Closing connection, failed to open. ", err)
 		return err
 	}
 

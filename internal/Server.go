@@ -22,21 +22,21 @@ var (
 	srvLog = log.WithField("module", "server")
 
 	// StartUpTime records first ime up
-	StartUpTime time.Time
+	startUpTime time.Time
 	// ServerVersion is a semver versioning
-	ServerVersion string
+	serverVersion string
 	// HTTPServer object
 	HTTPServer *http.Server
-	// Router boject
-	Router *router.Router
+	// AppRouter object
+	appRouter *router.Router
 	// Repo is the database object
-	Repo *connector.DbPool
-	// Handler is all the handlera
-	Handler *handlers.MyHandlers
-
+	repo *connector.DbPool
+	// AppHandlers is all the handlera
+	appHandlers *handlers.Handlers
+	// Address of server
 	address string
 
-	// add aditional components here
+	// aditional components here
 	// Monitor	*Monitor
 	// MessageQ *MessageQ
 )
@@ -45,33 +45,43 @@ var (
 func InitializeServer() error {
 	logf := srvLog.WithField("func", "InitializeServer")
 
-	StartUpTime = time.Now()
-	ServerVersion = config.Get("app.version")
+	startUpTime = time.Now()
+	serverVersion = config.Get("app.version")
 
-	Router = router.NewRouter()
-	Router.Router = mux.NewRouter()
+	appRouter = router.NewRouter()
+	appRouter.Router = mux.NewRouter()
 
 	logf.Info("connecting database...")
-	db, err := connector.NewDbInstance()
+	db, err := connector.NewInstance()
 	if err != nil {
 		return err
 	}
 
-	Repo = db
-	Handler = handlers.NewHandlers(db)
-	Router.Handler = Handler
+	repo = db
+	appHandlers = handlers.NewHandlers(repo)
+	appRouter.Handlers = appHandlers
 
 	logf.Info("initializing routes...")
-	router.InitRoutes(Router)
+	router.InitRoutes(appRouter)
 
-	address := fmt.Sprintf("%s:%s", config.Get("server.host"), config.Get("server.port"))
+	address = fmt.Sprintf("%s:%s", config.Get("server.host"), config.Get("server.port"))
 	HTTPServer = &http.Server{
 		Addr:         address,
 		WriteTimeout: time.Second * 15, // Good practice to set timeouts to avoid Slowloris attacks.
 		ReadTimeout:  time.Second * 15,
 		IdleTimeout:  time.Second * 60,
-		Handler:      Router.Router, // Pass our instance of gorilla/mux in.
+		Handler:      appRouter.Router, // Pass our instance of gorilla/mux in.
 	}
+
+	return nil
+}
+
+// shutdownServer handles shutdown gracefully, clossing connections, flushing caches etc.
+func shutdownServer() error {
+	logf := srvLog.WithField("func", "shutdownServer")
+
+	repo.CloseConnection()
+	logf.Info("done: db closed")
 
 	return nil
 }
@@ -89,7 +99,7 @@ func StartServer() {
 	}
 
 	logf.Info("starting server...")
-	logf.Info("listening at: ", address)
+	logf.Info("App version: ", serverVersion, ", listening at: ", address)
 	// Run our server in a goroutine so that it doesn't block.
 	go func() {
 		if err := HTTPServer.ListenAndServe(); err != nil {
@@ -116,6 +126,9 @@ func StartServer() {
 	// Optionally, you could run srv.Shutdown in a goroutine and block on
 	// <-ctx.Done() if your application should wait for other services
 	// to finalize based on context cancellation.
+
+	shutdownServer()
+
 	logf.Info("shutting down........ byee")
 	os.Exit(0)
 }

@@ -1,12 +1,10 @@
 package handlers
 
 import (
-	"context"
 	"io/ioutil"
 	"net/http"
 
 	"github.com/sapiderman/seed-go/internal/helpers"
-	log "github.com/sirupsen/logrus"
 )
 
 // GetTime que
@@ -17,16 +15,18 @@ func GetTime(w http.ResponseWriter, r *http.Request) {
 
 	resp, err := http.Get("http://worldtimeapi.org/api/ip")
 	if err != nil {
-		log.Fatal(err)
+		helpers.HTTPResponseBuilder(r.Context(), w, r, http.StatusOK, "time server unavailable", err.Error())
+		return
 	}
+
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		helpers.HTTPResponseBuilder(r.Context(), w, r, http.StatusOK, "time server response wierd", err.Error())
+		return
 	}
 
-	ctx := context.Background()
-	helpers.HTTPResponseBuilder(ctx, w, r, http.StatusOK, "", string(body))
+	helpers.HTTPResponseBuilder(r.Context(), w, r, http.StatusOK, "", string(body))
 
 }

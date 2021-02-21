@@ -15,8 +15,8 @@ import (
 
 // Router is a wrapper for all the router connections
 type Router struct {
-	Router  *mux.Router
-	Handler *handlers.MyHandlers
+	Router   *mux.Router        // point to mux routers
+	Handlers *handlers.Handlers // point to handlers
 }
 
 // NewRouter get new Instance
@@ -28,7 +28,7 @@ func NewRouter() *Router {
 func InitRoutes(router *Router) {
 
 	r := router.Router
-	rh := router.Handler
+	rh := router.Handlers
 
 	// register middlewares
 	// r.Use(apmgorilla.Middleware()) // apmgorilla.Instrument(r.MuxRouter) // elastic apm
@@ -57,7 +57,7 @@ func InitRoutes(router *Router) {
 		r.HandleFunc(path, api.ServeStatic).Methods("GET")
 	}
 
-	// v1 APIs
+	// v2 as pgx APIs
 	//v2 := r.PathPrefix("/v2").Subrouter()
 	//v2.HandleFunc("/devices", handlers.PgxListDevices).Methods("GET")
 
