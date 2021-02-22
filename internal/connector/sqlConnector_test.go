@@ -44,7 +44,7 @@ func Test_CreateAllTables(t *testing.T) {
 
 	db := connector.DbPool{Db: dbtest}
 
-	err = db.DropAllTables()
+	err = db.CreateAllTables()
 	if err != nil {
 		t.Fatal(err)
 	}

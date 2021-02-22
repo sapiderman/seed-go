@@ -18,7 +18,7 @@ const (
 
 	// CreateTblUsersSQL creates user table
 	CreateTblUsersSQL = `CREATE TABLE IF NOT EXISTS users (
-		id INT PRIMARY KEY,
+		id SERIAL PRIMARY KEY,
 		created_at TIMESTAMPTZ,
 		updated_at TIMESTAMPTZ,
 		deleted_at TIMESTAMPTZ,
@@ -32,7 +32,7 @@ const (
 
 	// CreateTblDevicesSQL creates device table
 	CreateTblDevicesSQL = `CREATE TABLE IF NOT EXISTS devices (
-		id INT PRIMARY KEY,
+		id SERIAL PRIMARY KEY,
 		created_at TIMESTAMPTZ,
 		updated_at TIMESTAMPTZ,
 		deleted_at TIMESTAMPTZ,
@@ -50,11 +50,11 @@ const (
 	// InsertUserSQL adds a user
 	InsertUserSQL = `INSERT INTO users 
 	(username, phone, email, password, pin, device) 
-	VALUES ($1, $2, $3, $4, $5, $6);`
+	VALUES (:username, :phone, :email, :password, :pin, :device);`
 
 	// InsertDeviceSQL adds a devics)
-	InsertDeviceSQL = `INSERT INTO devices (id, created_at, updated_at, deleted_at, phone_brand, phone_model, push_id, device_id)
-	  VALUES (:id, :created_at, :updated_at, :deleted_at, :phone_brand, :phone_model, :push_id, :device_id);`
+	InsertDeviceSQL = `INSERT INTO devices (created_at, updated_at, deleted_at, phone_brand, phone_model, push_id, device_id)
+	  VALUES (:created_at, :updated_at, :deleted_at, :phone_brand, :phone_model, :push_id, :device_id);`
 )
 
 //DbPool struct wraps the db instance
@@ -72,21 +72,12 @@ func NewInstance() (*DbPool, error) {
 
 	psgqlConnectStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		config.Get("psql.host"), config.Get("psql.port"), config.Get("psql.user"), config.Get("psql.pass"), config.Get("psql.dbname"))
-	db, err := sqlx.Open("postgres", psgqlConnectStr)
+	db, err := sqlx.Connect("postgres", psgqlConnectStr)
 	if err != nil {
 		logf.Error("Connection to database error: ", err)
 		return nil, err
 	}
 	// defer db.Close()
-
-	// ensure connection works: sqlx already pings db
-	err = db.Ping()
-	if err != nil {
-		db.Close()
-		logf.Error("Ping to database error: ", err)
-		return nil, err
-	}
-
 	logf.Info("db connection and ping successful...")
 
 	p := DbPool{Db: db}
@@ -153,11 +144,9 @@ func (p *DbPool) ListAllUsers() ([]models.User, error) {
 func (p *DbPool) InsertUser(users *models.NewUser) error {
 	logf := sqlxLog.WithField("func", "InsertUser")
 
-	// _, err := p.Db.NamedExec(`INSERT INTO user () VALUES ()`, users)
-	err := p.Db.Ping()
+	_, err := p.Db.NamedExec(InsertUserSQL, users)
 	if err != nil {
-		p.Db.Close()
-		logf.Warn("Closing connection, failed to open. ", err)
+		logf.Error(err)
 		return err
 	}
 

@@ -19,6 +19,8 @@ type Router struct {
 	Handlers *handlers.Handlers // point to handlers
 }
 
+var rLog = log.WithField("module", "router")
+
 // NewRouter get new Instance
 func NewRouter() *Router {
 	return &Router{}
@@ -26,6 +28,7 @@ func NewRouter() *Router {
 
 // InitRoutes creates our routes
 func InitRoutes(router *Router) {
+	rLog.WithField("func", "InitRoutes()").Info("Initializing routes...")
 
 	r := router.Router
 	rh := router.Handlers
@@ -58,8 +61,8 @@ func InitRoutes(router *Router) {
 	}
 
 	// v2 as pgx APIs
-	//v2 := r.PathPrefix("/v2").Subrouter()
-	//v2.HandleFunc("/devices", handlers.PgxListDevices).Methods("GET")
+	// v2 := r.PathPrefix("/v2").Subrouter()
+	// v2.HandleFunc("/devices", handlers.PgxListDevices).Methods("GET")
 
 	// r.NotFoundHandler = http.HandlerFunc(handlers.HandlerNotFound)
 	// r.HandleFunc("/", handlers.HandlerNotFound)

@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS users, device;
 
 CREATE TABLE IF NOT EXISTS users (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ,
     deleted_at TIMESTAMPTZ,
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 
 CREATE TABLE IF NOT EXISTS device (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ,
     deleted_at TIMESTAMPTZ,

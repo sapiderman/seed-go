@@ -97,6 +97,7 @@ func StartServer() {
 	if err != nil {
 		logf.Error(err)
 	}
+	defer shutdownServer()
 
 	logf.Info("starting server...")
 	logf.Info("App version: ", serverVersion, ", listening at: ", address)
@@ -126,9 +127,6 @@ func StartServer() {
 	// Optionally, you could run srv.Shutdown in a goroutine and block on
 	// <-ctx.Done() if your application should wait for other services
 	// to finalize based on context cancellation.
-
-	shutdownServer()
-
 	logf.Info("shutting down........ byee")
 	os.Exit(0)
 }
