@@ -128,5 +128,9 @@ func StartServer() {
 	// <-ctx.Done() if your application should wait for other services
 	// to finalize based on context cancellation.
 	logf.Info("shutting down........ byee")
+
+	t := time.Now()
+	upTime := t.Sub(startUpTime)
+	fmt.Println(" ***** server was up for : ", upTime.String(), " *******")
 	os.Exit(0)
 }
