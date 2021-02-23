@@ -7,8 +7,8 @@ import (
 
 	"encoding/json"
 
+	"github.com/sapiderman/seed-go/internal/connector"
 	"github.com/sapiderman/seed-go/internal/helpers"
-	"github.com/sapiderman/seed-go/internal/models"
 )
 
 // ListUsers lists all users
@@ -45,7 +45,7 @@ func (h *Handlers) ListDevices(w http.ResponseWriter, r *http.Request) {
 func (h *Handlers) AddDevice(w http.ResponseWriter, r *http.Request) {
 	logf := hLog.WithField("func", "AddDevice()")
 
-	newDevice := models.Device{}
+	newDevice := connector.Device{}
 	err := json.NewDecoder(r.Body).Decode(&newDevice)
 	if err != nil {
 		logf.Error(err)
@@ -71,7 +71,7 @@ func (h *Handlers) AddDevice(w http.ResponseWriter, r *http.Request) {
 func (h *Handlers) AddUser(w http.ResponseWriter, r *http.Request) {
 	logf := hLog.WithField("func", "AddUser()")
 
-	newuser := models.NewUser{}
+	newuser := connector.NewUser{}
 	err := json.NewDecoder(r.Body).Decode(&newuser)
 	if err != nil {
 		logf.Error(err)

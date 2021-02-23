@@ -8,7 +8,6 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/sapiderman/seed-go/internal/config"
-	"github.com/sapiderman/seed-go/internal/models"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -123,10 +122,10 @@ func (p *DbPool) CreateAllTables() error {
 }
 
 // ListAllUsers list all users
-func (p *DbPool) ListAllUsers() ([]models.User, error) {
+func (p *DbPool) ListAllUsers() ([]User, error) {
 
 	logf := sqlxLog.WithField("func", "ListAllUsers")
-	users := []models.User{}
+	users := []User{}
 
 	//_ , err := db.Exec(SelectAllUserSQL)
 	// err := db.Select(&users, SelectAllUserSQL)
@@ -141,7 +140,7 @@ func (p *DbPool) ListAllUsers() ([]models.User, error) {
 }
 
 // InsertUser inserts a single user to the database
-func (p *DbPool) InsertUser(users *models.NewUser) error {
+func (p *DbPool) InsertUser(users *NewUser) error {
 	logf := sqlxLog.WithField("func", "InsertUser")
 
 	_, err := p.Db.NamedExec(InsertUserSQL, users)
@@ -154,10 +153,10 @@ func (p *DbPool) InsertUser(users *models.NewUser) error {
 }
 
 // ListAllDevices list all devices
-func (p *DbPool) ListAllDevices() ([]models.Device, error) {
+func (p *DbPool) ListAllDevices() ([]Device, error) {
 	logf := sqlxLog.WithField("func", "ListAllDevices")
 
-	devices := []models.Device{}
+	devices := []Device{}
 
 	//_ , err := db.Exec(SelectAllUserSQL)
 	err := p.Db.Select(&devices, "SELECT * from devices;")
@@ -170,7 +169,7 @@ func (p *DbPool) ListAllDevices() ([]models.Device, error) {
 }
 
 // InsertDevice a record into device table
-func (p *DbPool) InsertDevice(d *models.Device) error {
+func (p *DbPool) InsertDevice(d *Device) error {
 	logf := sqlxLog.WithField("func", "ListAllInsertDeviceDevices")
 
 	res, err := p.Db.NamedExec(InsertDeviceSQL, d)
