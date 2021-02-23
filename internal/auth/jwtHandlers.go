@@ -6,8 +6,7 @@ import (
 	"time"
 
 	// "github.com/go-jose/go-jose/v3"
-	"github.com/go-jose/go-jose/jwt"
-	"github.com/go-jose/go-jose/v2"
+
 	"github.com/sapiderman/seed-go/internal/config"
 	log "github.com/sirupsen/logrus"
 )
@@ -33,7 +32,7 @@ func JwtMiddleware(next http.Handler) http.Handler {
 func GenerateTokens() (string, string, error) {
 
 	key := config.Get("jwt.key")
-	sig, err := jose.NewSigner(jose.SigningKey{Algorithm: jose.HS256, Key: key}, (&jose.SignerOptions{}).WithType("JWT"))
+	sig, err := jwt.NewSigner(jwt.SigningKey{Algorithm: jwt.HS256, Key: key}, (&jwt.SignerOptions{}).WithType("JWT"))
 	if err != nil {
 		panic(err)
 	}
@@ -45,8 +44,22 @@ func GenerateTokens() (string, string, error) {
 		Audience:  jwt.Audience{"leela", "fry"},
 		IssuedAt:  time.Now().Unix(),
 		ID:        "1234567890-ABCDEFGHIJKLMNOP",
+		Expired:   time.Now().Add(time.Hour * 24).Unix(),
+		Type:      "ACCESS",
 	}
 	accessToken, err := jwt.Signed(sig).Claims(cl).CompactSerialize()
+	if err != nil {
+		panic(err)
+	}
+
+	rfClaim := jwt.Config{
+		Expired: time.Now().Add(time.Hour * 24 * 7).Unix(),
+		Issuer:  "github.com/sapiderman/seed-go",
+		Type:    "REFRESH",
+		Subject: "1",
+	}
+
+	refreshToken, err := jwt.Signed(sig).Claims(rfClaim)
 	if err != nil {
 		panic(err)
 	}
