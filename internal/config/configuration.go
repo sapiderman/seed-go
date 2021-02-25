@@ -38,7 +38,8 @@ func LoadConfig() {
 	defCfg["psql.host"] = "localhost"
 	defCfg["psql.port"] = "5432"
 
-	defCfg["jwt.key"] = "sample_key"
+	defCfg["jwt.accessKey"] = "sample_key"
+	defCfg["jwt.refreshKey"] = "sample_key"
 
 	for k := range defCfg {
 		err := viper.BindEnv(k)

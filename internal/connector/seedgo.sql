@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
     );
 
 
-CREATE TABLE IF NOT EXISTS device (
+CREATE TABLE IF NOT EXISTS devices (
     id SERIAL PRIMARY KEY,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ,
