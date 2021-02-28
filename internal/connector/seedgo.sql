@@ -1,5 +1,4 @@
-DROP TABLE IF EXISTS users, device;
-
+DROP TABLE IF EXISTS users, device CASCADE;
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     created_at TIMESTAMPTZ,
@@ -12,8 +11,6 @@ CREATE TABLE IF NOT EXISTS users (
     pin INT,
     device INT REFERENCES device(id)
     );
-
-
 CREATE TABLE IF NOT EXISTS devices (
     id SERIAL PRIMARY KEY,
     created_at TIMESTAMPTZ,
@@ -25,5 +22,11 @@ CREATE TABLE IF NOT EXISTS devices (
     push_notif_id VARCHAR,
     device_id VARCHAR
 );
-
+CREATE TABLE IF NOT EXISTS login_history (
+    id SERIAL PRIMARY KEY,
+        created_at TIMESTAMPTZ,
+        username VARCHAR,
+        os VARCHAR,
+        browser VARCHAR,
+)
 

@@ -21,27 +21,23 @@
   ],
   "tags": [
     {
-      "name": "health",
-      "description": "system health check",
-      "externalDocs": {
-        "description": "Find more about health check",
-        "url": "www.healthcheck.org"
-      }
+      "name": "users",
+      "description": "user management apis"
     },
     {
       "name": "api",
-      "description": "you generic api",
-      "externalDocs": {
-        "description": "Find out more",
-        "url": "http://swagger.io"
-      }
+      "description": "you generic apis"
+    },
+    {
+      "name": "articles",
+      "description": "apis to create, edit, delete articles"
     }
   ],
   "paths": {
     "/health": {
       "get": {
         "tags": [
-          "health"
+          "api"
         ],
         "summary": "Health check",
         "description": "System health check",
@@ -52,6 +48,160 @@
           },
           "400": {
             "description": "Invalid status value"
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "handles user logins",
+        "responses": {
+          "200": {
+            "description": "success login"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "forbidden"
+          }
+        }
+      }
+    },
+    "/users/refresh": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "refresh authentication tokens",
+        "responses": {
+          "200": {
+            "description": "success login"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "forbidden"
+          }
+        }
+      }
+    },
+    "/users/details": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "get user details",
+        "responses": {
+          "200": {
+            "description": "success login"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "forbidden"
+          }
+        }
+      }
+    },
+    "/users/edit": {
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "summary": "edit profile",
+        "responses": {
+          "200": {
+            "description": "success login"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "forbidden"
+          }
+        }
+      }
+    },
+    "/articles/create": {
+      "post": {
+        "tags": [
+          "articles"
+        ],
+        "summary": "create new article",
+        "responses": {
+          "200": {
+            "description": "success login"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "forbidden"
+          }
+        }
+      }
+    },
+    "/articles/list": {
+      "get": {
+        "tags": [
+          "articles"
+        ],
+        "summary": "list all user's articles",
+        "responses": {
+          "200": {
+            "description": "success login"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "forbidden"
+          }
+        }
+      }
+    },
+    "/articles/delete/{id}": {
+      "delete": {
+        "tags": [
+          "articles"
+        ],
+        "summary": "delete an article",
+        "responses": {
+          "200": {
+            "description": "success login"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "forbidden"
           }
         }
       }
@@ -120,87 +270,6 @@
     }
   },
   "components": {
-    "schemas": {
-      "Category": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "name": {
-            "type": "string"
-          }
-        },
-        "xml": {
-          "name": "Category"
-        }
-      },
-      "User": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "username": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "phone": {
-            "type": "string"
-          },
-          "userStatus": {
-            "type": "integer",
-            "format": "int32",
-            "description": "User Status"
-          }
-        },
-        "xml": {
-          "name": "User"
-        }
-      },
-      "Tag": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "name": {
-            "type": "string"
-          }
-        },
-        "xml": {
-          "name": "Tag"
-        }
-      },
-      "ApiResponse": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "type": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      }
-    }
+    "schemas": {}
   }
 }

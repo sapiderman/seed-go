@@ -12,6 +12,7 @@ type User struct {
 	Password  string `json:"password"`
 	Pin       int    `json:"pin"`
 	Device    string `json:"device"`
+	Role      string `json:"role"`
 }
 
 // Device model for storing device table rows

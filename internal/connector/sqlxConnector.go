@@ -65,8 +65,8 @@ var (
 	sqlxLog = log.WithField("module", "sqlx")
 )
 
-// NewInstance create DbPool instance
-func NewInstance() (*DbPool, error) {
+// SqlxNewInstance create DbPool instance
+func SqlxNewInstance() (*DbPool, error) {
 	logf := sqlxLog.WithField("func", "InitializeDBInstance")
 
 	psgqlConnectStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",

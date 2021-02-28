@@ -29,12 +29,14 @@ var (
 	HTTPServer *http.Server
 	// AppRouter object
 	appRouter *router.Router
-	// Repo is the database object
-	repo *connector.DbPool
 	// AppHandlers is all the handlera
 	appHandlers *handlers.Handlers
 	// Address of server
 	address string
+	// Repo is the database object
+	sqxRepo *connector.DbPool
+	// Pgx Deriver
+	pgxRepo *connector.PgxConn
 
 	// aditional components here
 	// Monitor	*Monitor
@@ -52,13 +54,13 @@ func InitializeServer() error {
 	appRouter.Router = mux.NewRouter()
 
 	logf.Info("connecting database...")
-	db, err := connector.NewInstance()
+	db, err := connector.SqlxNewInstance()
 	if err != nil {
 		return err
 	}
 
-	repo = db
-	appHandlers = handlers.NewHandlers(repo)
+	sqxRepo = db
+	appHandlers = handlers.NewHandlers(sqxRepo)
 	appRouter.Handlers = appHandlers
 
 	logf.Info("initializing routes...")
@@ -80,7 +82,11 @@ func InitializeServer() error {
 func shutdownServer() error {
 	logf := srvLog.WithField("func", "shutdownServer")
 
-	repo.CloseConnection()
+	ctx := context.Background()
+
+	sqxRepo.CloseConnection()
+	pgxRepo.CloseConnection(ctx)
+
 	logf.Info("done: db closed")
 
 	return nil

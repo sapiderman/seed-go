@@ -10,7 +10,8 @@ build: build-static
 	GO_ENABLED=0 go build -a -ldflags '-extldflags "-static"' -o $(IMAGE_NAME) cmd/Main.go
 
 build-static:
-	go-resource -base "$(CURRENT_PATH)/api/swagger" -path "/docs" -filter "/**/*" -go "$(CURRENT_PATH)/api/StaticApi.go" -package api
+# disable for go1.16.. using a new embed technicq
+# go-resource -base "$(CURRENT_PATH)/api/swagger" -path "/docs" -filter "/**/*" -go "$(CURRENT_PATH)/api/StaticApi.go" -package api
 	go fmt ./...
 
 clean:
