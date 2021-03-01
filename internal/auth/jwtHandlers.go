@@ -112,7 +112,7 @@ func TokenValid(r *http.Request) error {
 
 // RefreshTokens ...
 func RefreshTokens(refreshToken string) (string, string, error) {
-	logf := jwtLog.WithField("func", "RefreshTokens")
+	logf := jwtLog.WithField("fn", "RefreshTokens")
 
 	//verify the token
 	rtKey := config.Get("jwt.refreshKey")

@@ -36,7 +36,7 @@ var (
 	// Repo is the database object
 	sqxRepo *connector.DbPool
 	// Pgx Deriver
-	pgxRepo *connector.PgxConn
+	pgxRepo *connector.PgxPool
 
 	// aditional components here
 	// Monitor	*Monitor
@@ -45,7 +45,7 @@ var (
 
 // InitializeServer initializes all server connections
 func InitializeServer() error {
-	logf := srvLog.WithField("func", "InitializeServer")
+	logf := srvLog.WithField("fn", "InitializeServer")
 
 	startUpTime = time.Now()
 	serverVersion = config.Get("app.version")
@@ -54,13 +54,20 @@ func InitializeServer() error {
 	appRouter.Router = mux.NewRouter()
 
 	logf.Info("connecting database...")
-	db, err := connector.SqlxNewInstance()
+	// db, err := connector.SqlxNewInstance()
+	// if err != nil {
+	// 	return err
+	// }
+	// sqxRepo = db
+
+	ctx := context.Background()
+	repo, err := connector.PgxNewConnection(ctx)
 	if err != nil {
+		logf.Error(err)
 		return err
 	}
 
-	sqxRepo = db
-	appHandlers = handlers.NewHandlers(sqxRepo)
+	appHandlers = handlers.NewHandlers(repo)
 	appRouter.Handlers = appHandlers
 
 	logf.Info("initializing routes...")
@@ -80,12 +87,12 @@ func InitializeServer() error {
 
 // shutdownServer handles shutdown gracefully, clossing connections, flushing caches etc.
 func shutdownServer() error {
-	logf := srvLog.WithField("func", "shutdownServer")
+	logf := srvLog.WithField("fn", "shutdownServer")
 
 	ctx := context.Background()
 
-	sqxRepo.CloseConnection()
-	pgxRepo.CloseConnection(ctx)
+	// sqxRepo.CloseConnection()
+	pgxRepo.PgxCloseConnection(ctx)
 
 	logf.Info("done: db closed")
 
@@ -96,7 +103,7 @@ func shutdownServer() error {
 func StartServer() {
 
 	var wait time.Duration
-	logf := srvLog.WithField("func", "StartServer")
+	logf := srvLog.WithField("fn", "StartServer")
 
 	logf.Info("initializing server...")
 	err := InitializeServer()

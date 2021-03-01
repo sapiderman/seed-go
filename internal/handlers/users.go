@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"bytes"
 	"fmt"
 	"net/http"
 
@@ -14,7 +13,7 @@ import (
 // ListUsers lists all users
 func (h *Handlers) ListUsers(w http.ResponseWriter, r *http.Request) {
 
-	users, err := h.repo.ListAllUsers()
+	users, err := h.repo.ListAllUsers(r.Context())
 	if err != nil {
 
 		w.WriteHeader(http.StatusNotImplemented)
@@ -29,21 +28,17 @@ func (h *Handlers) ListUsers(w http.ResponseWriter, r *http.Request) {
 // ListDevices lists all users
 func (h *Handlers) ListDevices(w http.ResponseWriter, r *http.Request) {
 
-	devlist, err := h.repo.ListAllDevices()
+	devlist, err := h.repo.ListAllDevices(r.Context())
 	if err != nil {
 
 		w.WriteHeader(http.StatusNotImplemented)
 	}
-
-	reqBodyBytes := new(bytes.Buffer)
-	json.NewEncoder(reqBodyBytes).Encode(devlist)
-	w.WriteHeader(http.StatusOK)
-	w.Write(reqBodyBytes.Bytes())
+	helpers.HTTPResponseBuilder(r.Context(), w, r, http.StatusOK, "List Devices", devlist)
 }
 
 // AddDevice adds a device to database
 func (h *Handlers) AddDevice(w http.ResponseWriter, r *http.Request) {
-	logf := hLog.WithField("func", "AddDevice()")
+	logf := hLog.WithField("fn", "AddDevice()")
 
 	newDevice := connector.Device{}
 	err := json.NewDecoder(r.Body).Decode(&newDevice)
@@ -59,17 +54,17 @@ func (h *Handlers) AddDevice(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.repo.InsertDevice(&newDevice)
-	if err != nil {
-		logf.Error(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	// err = h.repo.InsertDevice(&newDevice)
+	// if err != nil {
+	// 	logf.Error(err)
+	// 	w.WriteHeader(http.StatusInternalServerError)
+	// 	return
+	// }
 }
 
-// AddUser adds a user to database
+// AddUser registers new users
 func (h *Handlers) AddUser(w http.ResponseWriter, r *http.Request) {
-	logf := hLog.WithField("func", "AddUser()")
+	logf := hLog.WithField("fn", "AddUser()")
 
 	newuser := connector.NewUser{}
 	err := json.NewDecoder(r.Body).Decode(&newuser)
@@ -86,11 +81,11 @@ func (h *Handlers) AddUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.repo.InsertUser(&newuser)
-	if err != nil {
-		logf.Error(err)
-		helpers.HTTPResponseBuilder(r.Context(), w, r, http.StatusInternalServerError, "", nil)
-		return
-	}
+	// err = h.repo.InsertUser(&newuser)
+	// if err != nil {
+	// 	logf.Error(err)
+	// 	helpers.HTTPResponseBuilder(r.Context(), w, r, http.StatusInternalServerError, "", nil)
+	// 	return
+	// }
 
 }

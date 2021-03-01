@@ -28,7 +28,7 @@ func NewRouter() *Router {
 
 // InitRoutes creates our routes
 func InitRoutes(router *Router) {
-	rLog.WithField("func", "InitRoutes()").Info("Initializing routes...")
+	rLog.WithField("fn", "InitRoutes()").Info("Initializing routes...")
 
 	r := router.Router
 	rh := router.Handlers

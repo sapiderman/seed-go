@@ -35,7 +35,7 @@ type passwordConfig struct {
 
 // GenerateHash creates the key train
 func GenerateHash(password string) (encodedHash string, err error) {
-	logf := aLog.WithField("func", "GenerateHash")
+	logf := aLog.WithField("fn", "GenerateHash")
 
 	p := &passwordConfig{
 		memory:      64 * 1024,
@@ -64,7 +64,7 @@ func GenerateHash(password string) (encodedHash string, err error) {
 }
 
 func generateRandomBytes(n uint32) ([]byte, error) {
-	logf := aLog.WithField("func", "generateRandomBytes")
+	logf := aLog.WithField("fn", "generateRandomBytes")
 
 	b := make([]byte, n)
 	_, err := rand.Read(b)
@@ -78,7 +78,7 @@ func generateRandomBytes(n uint32) ([]byte, error) {
 
 // ComparePasswordAndHash compares plaintext and its store hash
 func ComparePasswordAndHash(password, encodedHash string) (match bool, err error) {
-	logf := aLog.WithField("func", "ComparePasswordAndHash")
+	logf := aLog.WithField("fn", "ComparePasswordAndHash")
 
 	// Extract the parameters, salt and derived key from the encoded password
 	// hash.
@@ -101,7 +101,7 @@ func ComparePasswordAndHash(password, encodedHash string) (match bool, err error
 }
 
 func decodeHash(encodedHash string) (p *passwordConfig, salt, hash []byte, err error) {
-	logf := aLog.WithField("func", "decodeHash")
+	logf := aLog.WithField("fn", "decodeHash")
 
 	vals := strings.Split(encodedHash, "$")
 	if len(vals) != 6 {
