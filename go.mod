@@ -11,7 +11,7 @@ require (
 	github.com/jmoiron/sqlx v1.3.1
 	github.com/lib/pq v1.10.0
 	github.com/nelkinda/health-go v0.0.1
-	github.com/sirupsen/logrus v1.8.0
+	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.7.1
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 )
