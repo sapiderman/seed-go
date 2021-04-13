@@ -15,7 +15,6 @@ type Handlers struct {
 }
 
 // NewHandlers instantiates myHandler
-// func NewHandlers(p *connector.DbPool) *Handlers {
 func NewHandlers(p *connector.PgxPool) *Handlers {
 	return &Handlers{repo: p}
 }
