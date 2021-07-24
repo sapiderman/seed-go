@@ -17,8 +17,9 @@ func ContextStart(next http.Handler) http.Handler {
 		ctx := r.Context()
 		if ctx == nil {
 			t := time.Duration(config.GetInt("server.request.timeout"))
-			ctx, cancelFn := context.WithTimeout(context.Background(), t*time.Second)
+			ctxNew, cancelFn := context.WithTimeout(context.Background(), t*time.Second)
 			defer cancelFn()
+			ctx = ctxNew // this is a bit ugly due to := scope
 		}
 
 		reqID := r.Header.Get("x-request-id")
