@@ -1,29 +1,32 @@
 package logger
 
 import (
-	"net/http"
 	"strings"
 
+	"github.com/sapiderman/seed-go/internal/config"
 	log "github.com/sirupsen/logrus"
 )
 
-// MyLogger does some stuff
-func MyLogger(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		if strings.HasPrefix(r.URL.Path, "/docs") {
-			log.Info("skipping /docs logging.")
-		} else {
-			// Do stuff
-			log.WithFields(log.Fields{
-				"method": r.Method,
-				"path":   r.URL.Path,
-				"header": r.Header,
-			}).Debug("Logger")
-			//.Info("Logger")
-
-		}
-		// Call the next handler, which can be another middleware in the chain, or the final handler.
-		next.ServeHTTP(w, r)
-	})
+// ConfigureLogging set logging lever from config
+func ConfigureLogging() {
+	lLevel := config.Get("server.log.level")
+	log.SetFormatter(&log.JSONFormatter{})
+	log.Info("Setting log level to: ", lLevel)
+	switch strings.ToUpper(lLevel) {
+	default:
+		log.Info("Unknown level [", lLevel, "]. Log level set to ERROR")
+		log.SetLevel(log.ErrorLevel)
+	case "TRACE":
+		log.SetLevel(log.TraceLevel)
+	case "DEBUG":
+		log.SetLevel(log.DebugLevel)
+	case "INFO":
+		log.SetLevel(log.InfoLevel)
+	case "WARN":
+		log.SetLevel(log.WarnLevel)
+	case "ERROR":
+		log.SetLevel(log.ErrorLevel)
+	case "FATAL":
+		log.SetLevel(log.FatalLevel)
+	}
 }

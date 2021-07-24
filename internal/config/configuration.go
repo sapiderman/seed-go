@@ -27,10 +27,9 @@ func LoadConfig() {
 	defCfg["server.host"] = "localhost"
 	defCfg["server.port"] = "7000"
 	defCfg["server.log.level"] = "debug" // valid values are trace, debug, info, warn, error, fatal
-	defCfg["server.timeout.write"] = "15 seconds"
-	defCfg["server.timeout.read"] = "15 seconds"
-	defCfg["server.timeout.idle"] = "60 seconds"
-	defCfg["server.timeout.graceshut"] = "15 seconds"
+	defCfg["server.timeout.write"] = "15"
+	defCfg["server.timeout.read"] = "15"
+	defCfg["server.request.timeout"] = "30" // in seconds
 
 	defCfg["psql.dbname"] = "mydb"
 	defCfg["psql.user"] = "seeduser"
