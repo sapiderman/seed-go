@@ -6,20 +6,19 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
-	"github.com/sapiderman/seed-go/api"
 	"github.com/sapiderman/seed-go/internal/handlers"
 	"github.com/sapiderman/seed-go/internal/middlewares"
 
 	log "github.com/sirupsen/logrus"
 )
 
+var rLog = log.WithField("module", "router")
+
 // Router is a wrapper for all the router connections
 type Router struct {
 	Router   *mux.Router        // point to mux routers
 	Handlers *handlers.Handlers // point to handlers
 }
-
-var rLog = log.WithField("module", "router")
 
 // NewRouter get new Instance
 func NewRouter() *Router {
@@ -56,9 +55,6 @@ func InitRoutes(router *Router) {
 
 	// handle swagger api static files as /docs.
 	// r.HandleFunc("/docs", api.ServeStatic).Methods("GET")
-	for path := range api.StaticResources {
-		r.HandleFunc(path, api.ServeStatic).Methods("GET")
-	}
 
 	// v2 as pgx APIs
 	// v2 := r.PathPrefix("/v2").Subrouter()
