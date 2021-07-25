@@ -13,6 +13,6 @@ require (
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/nelkinda/health-go v0.0.1
 	github.com/sirupsen/logrus v1.8.1
-	github.com/spf13/viper v1.7.1
+	github.com/spf13/viper v1.8.1
 	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2
 )
