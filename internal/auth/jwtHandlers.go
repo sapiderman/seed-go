@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gofrs/uuid"
+	"github.com/golang-jwt/jwt"
 	"github.com/sapiderman/seed-go/internal/config"
 	log "github.com/sirupsen/logrus"
 )
