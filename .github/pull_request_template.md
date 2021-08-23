@@ -13,7 +13,7 @@
 
 ### how did you implement
 
-1. impelmented feature1
+1. impelmented feature 1
 2. fixed feature 2
 
 ### how do you test
