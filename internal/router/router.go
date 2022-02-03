@@ -50,6 +50,10 @@ func InitRoutes(router *Router) {
 	v1.HandleFunc("/user", rh.AddUser).Methods("POST")
 	v1.HandleFunc("/device", rh.AddDevice).Methods("POST")
 
+	v1.HandleFunc("/callback/kredini", rh.CallBackKredini).Methods("POST")
+	v1.HandleFunc("/checkout/inquiry", rh.TransactionEngine).Methods("POST")
+	v1.HandleFunc("/onboarding", rh.Onboarding).Methods("POST")
+
 	// static file handler
 	r.PathPrefix("/web/").Handler(http.StripPrefix("/web/", http.FileServer(http.Dir("./web"))))
 
@@ -65,7 +69,7 @@ func InitRoutes(router *Router) {
 	// http.Handle("/", http.FileServer(http.Dir("./static/404.html")))
 
 	// display routes
-	walk(*r)
+	// walk(*r)
 }
 
 // walk runs the mux.Router.Walk method to print all the registerd routes

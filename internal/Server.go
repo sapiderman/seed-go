@@ -34,11 +34,11 @@ var (
 	// Address of server
 	address string
 	// Repo is the database object
-	sqxRepo *connector.DbPool
+	// sqxRepo *connector.DbPool
 	// Pgx Deriver
 	pgxRepo *connector.PgxPool
 
-	// aditional components here
+	// additional components here
 	// Monitor	*Monitor
 	// MessageQ *MessageQ
 )
@@ -140,7 +140,7 @@ func StartServer() {
 	// Optionally, you could run srv.Shutdown in a goroutine and block on
 	// <-ctx.Done() if your application should wait for other services
 	// to finalize based on context cancellation.
-	logf.Info("shutting down........ byee")
+	logf.Info("shutting down........ bye")
 
 	t := time.Now()
 	upTime := t.Sub(startUpTime)
