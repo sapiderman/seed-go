@@ -1,111 +1,79 @@
-# Golang Seed
+![](https://raw.githubusercontent.com/hyperjumptech/monika/main/docs/public/monika.svg)
 
-![Go](https://github.com/sapiderman/seed-go/workflows/Go/badge.svg)  
+[![Build Status](https://github.com/hyperjumptech/monika/workflows/Node.js%20CI/badge.svg?event=push&branch=main)](https://github.com/hyperjumptech/monika/actions) [![codecov](https://codecov.io/gh/hyperjumptech/monika/branch/main/graph/badge.svg?token=O3WVT7DP6F)](https://codecov.io/gh/hyperjumptech/monika) [![npm-version](https://img.shields.io/npm/v/@hyperjumptech/monika)](https://www.npmjs.com/package/@hyperjumptech/monika) [![npm](https://img.shields.io/npm/dt/@hyperjumptech/monika?label=NPM%20Downloads)](https://www.npmjs.com/package/@hyperjumptech/monika) [![Docker](https://img.shields.io/docker/pulls/hyperjump/monika)](https://hub.docker.com/r/hyperjump/monika)
 
-Small starter project to play around with golang features, github actions and various pipelines.  
+# About
 
-## Features
+Monika is a command line application for synthetic monitoring. The name Monika stands for "**Moni**toring Ber**ka**la", which means "periodic monitoring" in the Indonesian language.
 
-| Features          | Description                                                 |  
-| :-----------------| :---------------------------------------------------------: |  
-| gorilla mux       | [routing using gorilla mux](https://github.com/gorilla/mux) |  
-| contexts          | [contexts](https://golang.org/pkg/context/)                 |  
-| logrus            | [logging library](https://github.com/sirupsen/logrus)       |  
-| sqlx              | [sqlx driver](https://github.com/jmoiron/sqlx)              |  
-| pgx               | [pgx driver](https://github.com/jackc/pgx)                  |  
-| monitoring        | [elastic's application performance monitoring](https://www.elastic.co/guide/en/apm/agent/go/1.x/getting-started.html) |  
-| health check | [IETF RFC Health Ceck via nelkinda's health-go](https://tools.ietf.org/id/draft-inadarei-api-health-check-04.html) |  
-| swagger api       | [API documentations using swagger swagger.io](https://swagger.io/specification/) |  
-| | |  
+## How to Use
 
-todo:  
+You can find many ways to install Monika and how to start monitoring from the [Quick Start page](https://monika.hyperjump.tech/quick-start).
 
-- circuit breaker  
-- profiler  
+## Contributing
 
-## endpoints
+Monika is a Node.js application written in TypeScript using the [oclif framework](https://oclif.io/).  
+It was developed on **node v14 (LTS)**, and **npm v6**.
 
-GET /health 
-GET /docs   
-GET /v1/hello  
-GET /v1/time 
-GET /web/ 
+To start developing, clone this repository, then install the dependencies:
 
-GET /v1/users  
-GET /v1/devices  
-POST /v1/user  
-POST /v1/device  
+```bash
+git clone git@github.com:hyperjumptech/monika.git
+npm ci
+```
 
-## build
+Then, to run Monika from the source,
 
-`go build ./...`  
+- on Linux/Unix/Mac
 
-## tests
+```bash
+npm start
+```
 
-`go test ./... -v -covermode=count -coverprofile=coverage.out`  
+- on Windows
 
-or  
+```bash
+.\bin\run.cmd
+```
 
-`make test`  
-`make test-coverage`  
+To keep the formatting consistent, run the following command to format the source code:
 
-## generate-binary
+```bash
+npm run format
+```
 
-`go build -a -o seed-go-img cmd/Main.go`  
-  
-or  
-  
-`make build`  
+Finally you can also run `npm run test` to prevent regression.
 
-## create docker
+Once you have made the changes, open a Pull Request and explain the issue your change will fix or the feature your change will add.
 
-`make docker`  
+For contribution details on how to add custom notifications [see the New Notifications guide here](https://monika.hyperjump.tech/guides/new-notifications).
 
-## run docker  
+## Development References
 
-`make docker-run`  
+The tools and frameworks we used in this project are listed below:
 
-## some docs  
+- [oclif](https://oclif.io/) to scaffold the CLI.
+- [Prettier](https://prettier.io/) to format the code.
+- [ESLint](https://eslint.org/) to statically analyze the code to quickly find problems.
+- [Mocha](https://mochajs.org/) for testing.
+- [Istanbul](https://istanbul.js.org/) for code coverage.
 
-[license](./LICENSE)  
-[code of conduct](./code_of_conduct.md)  
+## Discussions
 
-## project structure
+If you need help, want to give feedback, or have a great idea to improve Monika, get involved! Let us know in the [Github discussions](https://github.com/hyperjumptech/monika/discussions).
 
+Please abide by the [Contributor's Code of Conduct](CODE_OF_CONDUCTS.md)
 
-├── api  
-├── cmd  
-├── docs  
-├── internal  
-└── web   
-   
-| name          | descriptions                                       |  
-| :------------ | :------------------------------------------------: |
-| api           | swagger api, any protocol and schema file are here |  
-| cmd           | main application lives here                        |  
-| docs          | design and user documentations collected here      |  
-| internal      | internal application and libraries are here        |  
-| web           | web static files, htmls and css stored here        |  
-  
-Further information see:  
-1. [Golang Project Structure](https://tutorialedge.net/golang/go-project-structure-best-practices)  
-2. [Golang standard project layout ](https://github.com/golang-standards/project-layout)  
+## Further information
 
-## integrations  
+For detailed information, you can click on any of the specific docs below:
 
-Using some free ci tools and code quality scanners.  There's some really great tools for public projects, trying them here.
+- [Quick Start](https://hyperjumptech.github.io/monika/quick-start)
+- [Installations](https://monika.hyperjump.tech/quick-start#installation)
+- [How it works](https://hyperjumptech.github.io/monika/guides/probes)
 
-| Service           | Status                                               |
-| :-------------    | :-----------------------------------:                 |
-| [github integations](www.github.com/features/actions)     |               |
-| [github codeQL](![CodeQL](https://github.com/sapiderman/seed-go/workflows/CodeQL/badge.svg)) | ![CodeQL](https://github.com/sapiderman/seed-go/workflows/CodeQL/badge.svg) |
-| [azure](dev.azure.com) | [![Build Status](https://dev.azure.com/sapiderman/seed-go/_apis/build/status/sapiderman.seed-go?branchName=master)](https://dev.azure.com/sapiderman/seed-go/_build/latest?definitionId=1&branchName=master)               |
-| [circleci](circleci.com) | [![Build Status](https://travis-ci.com/sapiderman/seed-go.svg?branch=master)](https://travis-ci.com/sapiderman/seed-go) |
-| [travic-ci.com](https://travis-ci.com) |[![Build Status](https://travis-ci.com/sapiderman/seed-go.svg?branch=master)](https://travis-ci.com/sapiderman/seed-go)             |
-| [appveyor.com](https://appveyor.com) | [![Build status](https://ci.appveyor.com/api/projects/status/dd8phuty1k4n4v23/branch/master?svg=true)](https://ci.appveyor.com/project/Budhi/seed-go/branch/master) |
-| [goreportcard.com](https://goreportcard.com)  | [![Go Report Card](https://goreportcard.com/badge/github.com/sapiderman/seed-go)](https://goreportcard.com/report/github.com/sapiderman/seed-go)             |
-| [codeclimate.com](https://www.codeclimate.com) | [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability) |
-|                   | [![Test Coverage](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/test_coverage)](https://codeclimate.com/github/codeclimate/codeclimate/test_coverage)             |  
-| | |  
+<a href="https://www.producthunt.com/posts/monika-2?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-monika&#0045;2" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=332404&theme=light" alt="Monika - Open&#0032;source&#0032;and&#0032;free&#0032;HTTP&#0032;monitoring&#0032;tool | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 
-fork. clone. contribute and share!  
+## License
+
+[MIT](./LICENSE.txt) License.
