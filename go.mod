@@ -7,7 +7,7 @@ require (
 	github.com/gofrs/uuid v4.2.0+incompatible
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/gorilla/mux v1.8.0
-	github.com/jackc/pgx/v4 v4.17.0
+	github.com/jackc/pgx/v4 v4.17.2
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/lib/pq v1.10.6
 	github.com/matoous/go-nanoid/v2 v2.0.0
@@ -27,7 +27,7 @@ require (
 	github.com/jackc/pgproto3/v2 v2.3.1 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
 	github.com/jackc/pgtype v1.12.0 // indirect
-	github.com/jackc/puddle v1.2.1 // indirect
+	github.com/jackc/puddle v1.3.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/nelkinda/http-go v0.0.1 // indirect
