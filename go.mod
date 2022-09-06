@@ -9,7 +9,7 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/jackc/pgx/v4 v4.17.0
 	github.com/jmoiron/sqlx v1.3.5
-	github.com/lib/pq v1.10.6
+	github.com/lib/pq v1.10.7
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/nelkinda/health-go v0.0.1
 	github.com/sirupsen/logrus v1.9.0
