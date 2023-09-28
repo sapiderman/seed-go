@@ -22,6 +22,7 @@ todo:
 
 - circuit breaker  
 - profiler  
+- test
 
 ## endpoints
 
