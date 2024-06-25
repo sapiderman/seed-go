@@ -1,6 +1,6 @@
 module github.com/sapiderman/seed-go
 
-go 1.17
+go 1.22
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef

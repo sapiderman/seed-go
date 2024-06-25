@@ -6,8 +6,9 @@ IMAGE_NAME ?= seed-go-img
 .PHONY: all test clean build docker
 
 build: build-static
-	#go build -a -o $(IMAGE_NAME) cmd/Main.go
-	GO_ENABLED=0 go build -a -ldflags '-extldflags "-static"' -o $(IMAGE_NAME) cmd/Main.go
+	# GOOS=darwin GOARCH=amd64 go build -a -o $(IMAGE_NAME) cmd/Main.go  # for mac
+	GO_ENABLED=0 go build -a #-ldflags '-extldflags "-static"' -o $(IMAGE_NAME) cmd/Main.go # for linux
+
 
 build-static:
 # disable for go1.16.. using a new embed technicq

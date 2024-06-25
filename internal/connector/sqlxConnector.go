@@ -13,7 +13,7 @@ import (
 
 const ()
 
-//DbPool struct wraps the db instance
+// DbPool struct wraps the db instance
 type DbPool struct {
 	Db *sqlx.DB
 }
