@@ -39,11 +39,13 @@ func InitRoutes(router *Router) {
 	// health check endpoint. Not in a version path as it will seems to be a permanent endpoint (famous last words)
 	h := handlers.NewHealth()
 	r.HandleFunc("/health", h.Handler)
+	r.HandleFunc("/", handlers.Hello)
 
 	// v1 APIs
 	v1 := r.PathPrefix("/v1").Subrouter()
 	v1.HandleFunc("/hello", handlers.Hello).Methods("GET")
 	v1.HandleFunc("/time", handlers.GetTime).Methods("GET")
+	v1.HandleFunc("/timeout", handlers.GetTimeOut).Methods("GET")
 
 	v1.HandleFunc("/users", rh.ListUsers).Methods("GET")
 	v1.HandleFunc("/devices", rh.ListDevices).Methods("GET")

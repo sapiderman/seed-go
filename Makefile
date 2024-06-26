@@ -1,7 +1,7 @@
 # seed-go makefile
 
 CURRENT_PATH ?= $(shell pwd)
-IMAGE_NAME ?= seed-go-img
+IMAGE_NAME ?= mock-go-img
 
 .PHONY: all test clean build docker
 
@@ -11,8 +11,6 @@ build: build-static
 
 
 build-static:
-# disable for go1.16.. using a new embed technicq
-# go-resource -base "$(CURRENT_PATH)/api/swagger" -path "/docs" -filter "/**/*" -go "$(CURRENT_PATH)/api/StaticApi.go" -package api
 	go fmt ./...
 
 clean:

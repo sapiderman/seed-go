@@ -3,15 +3,16 @@ package handlers
 import (
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/sapiderman/seed-go/internal/helpers"
 )
 
-// GetTime que
+// GetTime
 func GetTime(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
+	// w.WriteHeader(http.StatusOK)
 
 	resp, err := http.Get("http://worldtimeapi.org/api/ip")
 	if err != nil {
@@ -28,5 +29,15 @@ func GetTime(w http.ResponseWriter, r *http.Request) {
 	}
 
 	helpers.HTTPResponseBuilder(r.Context(), w, r, http.StatusOK, "", string(body))
+
+}
+
+// GetTime
+func GetTimeOut(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Content-Type", "application/json")
+	time.Sleep(15 * time.Second)
+
+	helpers.HTTPResponseBuilder(r.Context(), w, r, http.StatusRequestTimeout, "", "timeout")
 
 }

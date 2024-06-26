@@ -66,10 +66,10 @@ const (
 	device_id VARCHAR
 	);`
 	// SelectAllUserSQL queries user table
-	selectAllUserSQL = `SELECT * from users;`
+	// selectAllUserSQL = `SELECT * from users;`
 
 	// SelectAllDeviceSQL queries device table
-	selectAllDeviceSQL = `SELECT * from devices;`
+	// selectAllDeviceSQL = `SELECT * from devices;`
 
 	// InsertUserSQL adds a user
 	insertUserSQL = `INSERT INTO users 

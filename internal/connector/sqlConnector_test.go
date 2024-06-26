@@ -95,8 +95,8 @@ func Test_ListAllDevices(t *testing.T) {
 	p := connector.DbPool{Db: dbtest}
 
 	// ctx := context.Background()
-	dev := []connector.Device{}
-	dev, err = p.ListAllDevices()
+	// _ := []connector.Device{}
+	dev, err := p.ListAllDevices()
 	if err != nil {
 		t.Fatal(err)
 	}
