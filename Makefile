@@ -7,7 +7,7 @@ IMAGE_NAME ?= mock-go-img
 
 build: build-static
 	# GOOS=darwin GOARCH=amd64 go build -a -o $(IMAGE_NAME) cmd/Main.go  # for mac
-	GO_ENABLED=0 go build -a #-ldflags '-extldflags "-static"' -o $(IMAGE_NAME) cmd/Main.go # for linux
+	GO_ENABLED=0 go build -a -ldflags '-extldflags "-static"' -o $(IMAGE_NAME) cmd/Main.go # for linux
 
 
 build-static:
