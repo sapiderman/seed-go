@@ -4,7 +4,7 @@ go 1.22
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef
-	github.com/gofrs/uuid v4.2.0+incompatible
+	github.com/gofrs/uuid v4.4.0+incompatible
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/gorilla/mux v1.8.0
 	github.com/jackc/pgx/v4 v4.17.0
