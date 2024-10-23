@@ -21,6 +21,12 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
 
+    - name: debug cicd
+      run: |
+        ls -la
+        whoami
+        pwd
+
     - name: Vet sources
       run: go vet ./...
 
