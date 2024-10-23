@@ -2,7 +2,7 @@
 
 ![Go](https://github.com/sapiderman/seed-go/workflows/Go/badge.svg)  
 
-Small starter project to play around with golang features, github actions and various pipelines.  
+Small starter project to play around with golang features, github actions and various pipelines. Works well as example and mock server.
 
 ## Features
 
@@ -26,11 +26,11 @@ todo:
 
 ## endpoints
 
-GET /health 
-GET /docs   
+GET /health  
+GET /docs  
 GET /v1/hello  
-GET /v1/time 
-GET /web/ 
+GET /v1/time  
+GET /web/  
 
 GET /v1/users  
 GET /v1/devices  
@@ -73,13 +73,12 @@ or
 
 ## project structure
 
-
 ├── api  
 ├── cmd  
 ├── docs  
 ├── internal  
-└── web   
-   
+└── web  
+  
 | name          | descriptions                                       |  
 | :------------ | :------------------------------------------------: |
 | api           | swagger api, any protocol and schema file are here |  
@@ -89,8 +88,10 @@ or
 | web           | web static files, htmls and css stored here        |  
   
 Further information see:  
-1. [Golang Project Structure](https://tutorialedge.net/golang/go-project-structure-best-practices)  
-2. [Golang standard project layout ](https://github.com/golang-standards/project-layout)  
+
+1. [Golang Project Structure](https://tutorialedge.net/golang/go-project-structure-best-practices).
+
+2. [Golang standard project layout](https://github.com/golang-standards/project-layout)  
 
 ## integrations  
 

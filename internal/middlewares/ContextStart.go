@@ -6,8 +6,8 @@ import (
 	"time"
 
 	gonanoid "github.com/matoous/go-nanoid/v2"
-	"github.com/sapiderman/seed-go/internal/config"
 	contextkeys "github.com/sapiderman/seed-go/internal/contextKeys"
+	"github.com/spf13/viper"
 )
 
 // ContextStart begin all requests with a x-request-id
@@ -16,7 +16,7 @@ func ContextStart(next http.Handler) http.Handler {
 
 		ctx := r.Context()
 		if ctx == nil {
-			t := time.Duration(config.GetInt("server.request.timeout"))
+			t := time.Duration(viper.GetInt("server.request.timeout"))
 			ctxNew, cancelFn := context.WithTimeout(context.Background(), t*time.Second)
 			defer cancelFn()
 			ctx = ctxNew // this is a bit ugly due to := scope

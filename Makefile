@@ -7,7 +7,7 @@ IMAGE_NAME ?= mock-go-img
 
 build: build-static
 	# GOOS=darwin GOARCH=amd64 go build -a -o $(IMAGE_NAME) cmd/Main.go  # for mac
-	GO_ENABLED=0 go build -a -ldflags '-extldflags "-static"' -o $(IMAGE_NAME) cmd/Main.go # for linux
+	go build -a -ldflags '-extldflags "-static"' -o $(IMAGE_NAME) cmd/Main.go # for linux
 
 
 build-static:
@@ -17,8 +17,8 @@ clean:
 	go clean
 	rm -f $(IMAGE_NAME)
 
-lint: build
-	golint -set_exit_status ./...
+lint: 
+	staticcheck ./...
 
 test-short: lint
 	go test ./... -v -covermode=count -coverprofile=coverage.out -short

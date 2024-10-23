@@ -3,13 +3,13 @@ package logger
 import (
 	"strings"
 
-	"github.com/sapiderman/seed-go/internal/config"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 // ConfigureLogging set logging lever from config
 func ConfigureLogging() {
-	lLevel := config.Get("server.log.level")
+	lLevel := viper.Get("server.log.level").(string)
 	log.SetFormatter(&log.JSONFormatter{})
 	log.Info("Setting log level to: ", lLevel)
 	switch strings.ToUpper(lLevel) {

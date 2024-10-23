@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/spf13/viper"
 
 	"github.com/sapiderman/seed-go/internal/config"
 	log "github.com/sirupsen/logrus"
@@ -24,7 +25,7 @@ func PgxNewConnection(ctx context.Context) (*PgxPool, error) {
 	logf := pgxLog.WithField("fn", "PgxNewConnection")
 
 	pgxConnectorStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
-		config.Get("psql.host"), config.Get("psql.port"), config.Get("psql.user"), config.Get("psql.pass"), config.Get("psql.dbname"))
+		viper.GetString("psql.host"), viper.Get("psql.port"), config.Get("psql.user"), config.Get("psql.pass"), config.Get("psql.dbname"))
 
 	conn, err := pgxpool.Connect(ctx, pgxConnectorStr)
 	if err != nil {

@@ -8,8 +8,8 @@ import (
 
 	"github.com/gofrs/uuid"
 	"github.com/golang-jwt/jwt"
-	"github.com/sapiderman/seed-go/internal/config"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -33,7 +33,7 @@ func JwtMiddleware(next http.Handler) http.Handler {
 func GenerateTokenPair(subject string) (string, string, error) {
 
 	//Creating Access Token
-	atKey := config.Get("jwt.accessKey")
+	atKey := viper.GetString("jwt.accessKey")
 	atC := jwt.MapClaims{}
 
 	atExpires := time.Now().Add(time.Minute * 15).Unix()
@@ -54,7 +54,7 @@ func GenerateTokenPair(subject string) (string, string, error) {
 	}
 
 	//Creating Refresh Token
-	rtKey := config.Get("jwt.refreshKey")
+	rtKey := viper.GetString("jwt.refreshKey")
 	rtExpires := time.Now().Add(time.Hour * 24 * 7).Unix()
 
 	rtC := jwt.MapClaims{}
@@ -90,7 +90,7 @@ func VerifyAccessToken(r *http.Request) (*jwt.Token, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return []byte(config.Get("jwt.accessKey")), nil
+		return []byte(viper.GetString("jwt.accessKey")), nil
 	})
 	if err != nil {
 		return nil, err
@@ -115,7 +115,7 @@ func RefreshTokens(refreshToken string) (string, string, error) {
 	logf := jwtLog.WithField("fn", "RefreshTokens")
 
 	//verify the token
-	rtKey := config.Get("jwt.refreshKey")
+	rtKey := viper.GetString("jwt.refreshKey")
 	token, err := jwt.Parse(refreshToken, func(token *jwt.Token) (interface{}, error) {
 		//Make sure that the token method conform to "SigningMethodHMAC"
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
