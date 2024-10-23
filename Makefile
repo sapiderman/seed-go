@@ -5,20 +5,21 @@ IMAGE_NAME ?= mock-go-img
 
 .PHONY: all test clean build docker
 
-build: build-static
+build: test-static
 	# GOOS=darwin GOARCH=amd64 go build -a -o $(IMAGE_NAME) cmd/Main.go  # for mac
 	go build -a -ldflags '-extldflags "-static"' -o $(IMAGE_NAME) cmd/Main.go # for linux
 
-
-build-static:
+build-lint:
 	go fmt ./...
 
 clean:
 	go clean
 	rm -f $(IMAGE_NAME)
 
-lint: 
+test-static: build-lint
+	go vet ./...
 	staticcheck ./...
+	govulncheck -show verbose ./...
 
 test-short: lint
 	go test ./... -v -covermode=count -coverprofile=coverage.out -short
