@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/sapiderman/seed-go/internal/config"
 	"github.com/sapiderman/seed-go/internal/connector"
 	"github.com/sapiderman/seed-go/internal/handlers"
 	"github.com/sapiderman/seed-go/internal/router"
@@ -51,9 +52,8 @@ func InitializeServer() error {
 
 	startUpTime = time.Now()
 
-	c := cfg.InitConfig()
-
-	serverVersion = viper.Get("app.version").(string)
+	cfg, _ = config.InitConfig()
+	serverVersion = cfg.Get("app.version").(string)
 
 	appRouter = router.NewRouter()
 	appRouter.Router = mux.NewRouter()
@@ -66,7 +66,7 @@ func InitializeServer() error {
 	// sqxRepo = db
 
 	ctx := context.Background()
-	repo, err := connector.PgxNewConnection(ctx)
+	repo, err := connector.PgxNewConnection(ctx, cfg)
 	if err != nil {
 		logf.Error(err)
 		return err
@@ -78,7 +78,7 @@ func InitializeServer() error {
 	logf.Info("initializing routes...")
 	router.InitRoutes(appRouter)
 
-	address = fmt.Sprintf("%s:%s", viper.Get("server.host").(string), viper.Get("server.port").(string))
+	address = fmt.Sprintf("%s:%s", cfg.Get("server.host").(string), cfg.Get("server.port").(string))
 	HTTPServer = &http.Server{
 		Addr:         address,
 		WriteTimeout: time.Second * 15, // Good practice to set timeouts to avoid Slowloris attacks.

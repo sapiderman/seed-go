@@ -11,8 +11,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// go:embed swagger
 var (
+	//go:embed swagger
 	EmbedFs embed.FS
 	aLog    = log.WithField("module", "swagger")
 )

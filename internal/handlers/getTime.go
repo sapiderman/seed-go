@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
 
@@ -22,7 +22,7 @@ func GetTime(w http.ResponseWriter, r *http.Request) {
 
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		helpers.HTTPResponseBuilder(r.Context(), w, r, http.StatusOK, "time server response wierd", err.Error())
 		return

@@ -104,7 +104,7 @@ func TokenValid(r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	if _, ok := token.Claims.(jwt.Claims); !ok && !token.Valid {
+	if !token.Valid {
 		return err
 	}
 	return nil
@@ -130,7 +130,7 @@ func RefreshTokens(refreshToken string) (string, string, error) {
 		return "", "", err
 	}
 	//is token valid?
-	if _, ok := token.Claims.(jwt.Claims); !ok && !token.Valid {
+	if !token.Valid {
 		logf.Error(err)
 		return "", "", err
 	}
@@ -156,7 +156,7 @@ func RefreshTokens(refreshToken string) (string, string, error) {
 		// }
 		//Create new pairs of refresh and access tokens
 		at, _, createErr := GenerateTokenPair(subject)
-		if err != nil {
+		if createErr != nil {
 			logf.Error(createErr)
 			return "", "", createErr
 		}

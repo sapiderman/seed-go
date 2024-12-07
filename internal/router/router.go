@@ -71,7 +71,7 @@ func InitRoutes(router *Router) {
 	// http.Handle("/", http.FileServer(http.Dir("./static/404.html")))
 
 	// display routes
-	// walk(*r)
+	walk(*r)
 }
 
 // walk runs the mux.Router.Walk method to print all the registerd routes

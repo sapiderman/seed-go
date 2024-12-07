@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	_ "github.com/lib/pq"
-	"github.com/sapiderman/seed-go/internal/config"
 	"github.com/sapiderman/seed-go/internal/connector"
+	"github.com/spf13/viper"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -14,7 +14,7 @@ import (
 func Test_DropAllTables(t *testing.T) {
 
 	psgqlConnectStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		config.Get("psql.host"), config.Get("psql.port"), config.Get("psql.user"), config.Get("psql.pass"), config.Get("psql.dbname"))
+		viper.Get("psql.host"), viper.Get("psql.port"), viper.Get("psql.user"), viper.Get("psql.pass"), viper.Get("psql.dbname"))
 	dbtest, err := sqlx.Connect("postgres", psgqlConnectStr)
 	if err != nil {
 		t.Fatal(err)
@@ -34,7 +34,7 @@ func Test_CreateAllTables(t *testing.T) {
 	var dbtest *sqlx.DB
 
 	psgqlConnectStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		config.Get("psql.host"), config.Get("psql.port"), config.Get("psql.user"), config.Get("psql.pass"), config.Get("psql.dbname"))
+		viper.Get("psql.host"), viper.Get("psql.port"), viper.Get("psql.user"), viper.Get("psql.pass"), viper.Get("psql.dbname"))
 	dbtest, err := sqlx.Connect("postgres", psgqlConnectStr)
 	if err != nil {
 		t.Fatal(err)
@@ -52,7 +52,7 @@ func Test_CreateAllTables(t *testing.T) {
 func Test_InsertDevice(t *testing.T) {
 
 	psgqlConnectStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
-		config.Get("psql.host"), config.Get("psql.port"), config.Get("psql.user"), config.Get("psql.pass"), config.Get("psql.dbname"))
+		viper.Get("psql.host"), viper.Get("psql.port"), viper.Get("psql.user"), viper.Get("psql.pass"), viper.Get("psql.dbname"))
 	dbtest, err := sqlx.Connect("postgres", psgqlConnectStr)
 	if err != nil {
 		t.Fatal(err)
@@ -76,7 +76,7 @@ func Test_InsertDevice(t *testing.T) {
 		DeviceID:   "test_device_id",
 	}
 
-	_, err = p.Db.NamedExec(connector.InsertDeviceSQL, testDev)
+	p.Db.NamedExec(connector.InsertDeviceSQL, testDev)
 	err = p.InsertDevice(&testDev)
 	if err != nil {
 		t.Fatal(err)
@@ -86,7 +86,7 @@ func Test_InsertDevice(t *testing.T) {
 
 func Test_ListAllDevices(t *testing.T) {
 	psgqlConnectStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
-		config.Get("psql.host"), config.Get("psql.port"), config.Get("psql.user"), config.Get("psql.pass"), config.Get("psql.dbname"))
+		viper.Get("psql.host"), viper.Get("psql.port"), viper.Get("psql.user"), viper.Get("psql.pass"), viper.Get("psql.dbname"))
 	dbtest, err := sqlx.Connect("postgres", psgqlConnectStr)
 	if err != nil {
 		t.Fatal(err)

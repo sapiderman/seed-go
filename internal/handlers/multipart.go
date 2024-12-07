@@ -11,7 +11,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func (h *Handlers) requestDump(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) RequestDump(w http.ResponseWriter, r *http.Request) {
 	requestDump, err := httputil.DumpRequest(r, true)
 	if err != nil {
 		fmt.Println(err)

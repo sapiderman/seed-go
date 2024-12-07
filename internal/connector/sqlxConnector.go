@@ -5,9 +5,9 @@ import (
 
 	//postgress import
 	_ "github.com/lib/pq"
+	"github.com/spf13/viper"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/sapiderman/seed-go/internal/config"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -23,11 +23,11 @@ var (
 )
 
 // SqlxNewInstance create DbPool instance
-func SqlxNewInstance() (*DbPool, error) {
+func SqlxNewInstance(cfg *viper.Viper) (*DbPool, error) {
 	logf := sqlxLog.WithField("fn", "InitializeDBInstance")
 
 	psgqlConnectStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		config.Get("psql.host"), config.Get("psql.port"), config.Get("psql.user"), config.Get("psql.pass"), config.Get("psql.dbname"))
+		cfg.Get("psql.host"), cfg.Get("psql.port"), cfg.Get("psql.user"), cfg.Get("psql.pass"), cfg.Get("psql.dbname"))
 	db, err := sqlx.Connect("postgres", psgqlConnectStr)
 	if err != nil {
 		logf.Error("Connection to database error: ", err)
