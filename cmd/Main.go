@@ -9,7 +9,7 @@ import (
 
 var (
 	spashScreen = `
-	🇸​​​​​🇪​​​​​🇷​​​​​🇻​​​​​🇪​​​​​🇷​​​​​ 🇺​​​​​🇵​​​​​
+	SERVER UP
 	
 	golang seed-go
 	https://github.com/sapiderman/seed-go/blob/master/README.md
