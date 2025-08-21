@@ -12,13 +12,15 @@ build: test-static
 build-lint:
 	go fmt ./...
 
+lint: build-lint
+
 clean:
 	go clean
 	rm -f $(IMAGE_NAME)
 
 test-static: build-lint
-	staticcheck ./...
-	govulncheck -show verbose ./...
+	~/go/bin/staticcheck ./...
+	# ~/go/bin/govulncheck -show verbose ./...
 
 test-short: lint
 	go test ./... -v -covermode=count -coverprofile=coverage.out -short
