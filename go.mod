@@ -14,7 +14,7 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/matoous/go-nanoid/v2 v2.1.0
 	github.com/nelkinda/health-go v0.0.1
-	github.com/sirupsen/logrus v1.9.3
+	github.com/sirupsen/logrus v1.9.4
 	github.com/spf13/viper v1.20.1
 	golang.org/x/crypto v0.41.0
 	gopkg.in/yaml.v2 v2.4.0
