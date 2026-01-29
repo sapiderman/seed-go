@@ -11,7 +11,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/jackc/pgx/v4 v4.18.3
 	github.com/jmoiron/sqlx v1.4.0
-	github.com/lib/pq v1.10.9
+	github.com/lib/pq v1.11.1
 	github.com/matoous/go-nanoid/v2 v2.1.0
 	github.com/nelkinda/health-go v0.0.1
 	github.com/sirupsen/logrus v1.9.3
